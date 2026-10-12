@@ -1,0 +1,26 @@
+/** The infographic kit: what a talk's scenes are drawn and moved with. */
+export { ArtefactFrame } from "./artefact-frame";
+export { Board, Cell, Row, type Holders } from "./board";
+export { Ledger, TimeRule, ledgerKeys, type LedgerLine } from "./chrome-parts";
+export { Dashed, Tag } from "./dashed";
+export { Bracket, Flag, InkRing, InkUnderline, PassTick, Person, QuoteRule, Ring, TickRule, tickXs } from "./figures";
+export { Agent, Dept, Tile, Waveform } from "./glyphs";
+export { AGENT_R, AGENT_ROLES, TILE, WAVE, tileBox, waveform, type AgentRole, type TileSize, type WaveformLayout } from "./glyph-geometry";
+export { board, multiples, type BoardLayout, type BoardSpec, type CellLayout, type MultiplesLayout, type RowLayout } from "./board-layout";
+export { centre, place, route } from "./geometry";
+export { Annotation, Connector, FanOut, Gate, HumanMark, Line, Node, Packet, RIDE_ABOVE, Rider, fanKeys, type LineTone } from "./marks";
+export { AGENT_HUES, HUES, ROLE_HUE, type AgentHue, type Hue } from "./palette";
+export { Ghost, Part, Plane } from "./plane";
+export { SmallMultiples } from "./small-multiples";
+export { CONTENT_TOP, STORY, Story, storyKeys, storyRows, type StoryBand } from "./story";
+export { Tab, tabBeside, type TabPlace } from "./tab";
+export { unitGrid, type UnitGridLayout } from "./unit-grid";
+export { UnitRow } from "./unit-row";
+export { CardToken, Stations } from "./stations";
+export { cardAt, stations, type StationLayout, type StationsLayout, type StationsSpec } from "./stations-layout";
+export { Block, Counter, SetText, TypeText } from "./text";
+export { TickField } from "./tick-field";
+export { timeRule, type TimeRuleLayout, type TimeRuleSpec } from "./time-rule-layout";
+export { CHAIN, DUR, EASE, HOLD, RISE, STAGE, STAGGER, box, type Box, type Point } from "./tokens";
+export * from "./verbs";
+export { frame, HOME, type Camera } from "../engine/camera";

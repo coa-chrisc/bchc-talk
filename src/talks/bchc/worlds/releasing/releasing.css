@@ -1,0 +1,375 @@
+/* Part 5's own marks, under the kit's rules (kit.css) and the Austin Public
+   Health palette (docs/bchc-brand.md): navy words and lines on white, and
+   each shared part in its role's colour (--hue, from data-hue): the agent
+   pack green, the source code indigo, the design system and skills pink,
+   help sky, the sauce gold. Gold is only ever a fill. Each state arrives as
+   --d (drawn) or --k (filled), so the same values always draw the same
+   picture. */
+
+/* Words set in the marks: navy, in the deck's face. */
+.rel-words {
+  font-family: var(--dk-face);
+  font-size: var(--dk-text);
+  font-weight: 500;
+  fill: var(--dk-paper);
+}
+
+.rel-words--label {
+  font-size: var(--dk-label);
+  letter-spacing: 0.01em;
+}
+
+.rel-words--name {
+  font-weight: 600;
+}
+
+/* Words that come up as their part's outline draws (--d). */
+.rel-words--drawn {
+  opacity: var(--d, 0);
+}
+
+/* A navy outline of a thing that is the subject. */
+.bchc-line {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.rel-line--heavy {
+  stroke-width: 4;
+}
+
+/* An outline in the part's own colour. */
+.rel-hue-line {
+  fill: none;
+  stroke: var(--hue);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* A drawing in the part's colour that has no length to draw along: it comes up as its part fills (--k). */
+.rel-hue-line--whole {
+  opacity: var(--k, 0);
+}
+
+/* Solid navy: a line of writing, a button, a swatch. */
+.rel-ink-fill {
+  fill: var(--dk-paper);
+}
+
+/* Solid in the part's colour, coming up as its part fills (--k); `--whole` is there with its part. */
+.rel-hue-fill {
+  fill: var(--hue);
+  opacity: var(--k, 0);
+}
+
+.rel-hue-fill--whole {
+  opacity: 1;
+}
+
+/* Slide 29. The bottle: carried by --x and --y, leaned by --r about its base (scene-sauce.tsx). */
+.rel-bottle {
+  transform: translate(calc(var(--x, 0) * 1px), calc(var(--y, 0) * 1px)) rotate(calc(var(--r, 0) * 1deg));
+}
+
+/* The sauce: solid gold, so it reads inside the navy line on white, as high (standing) or as deep (lying) as --k. */
+.rel-sauce {
+  fill: var(--hue);
+  transform: scaleY(var(--k, 0));
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+
+/* A drop and a splash: solid gold with a navy edge, so a small gold mark still reads on white. */
+.rel-sauce-mark {
+  fill: var(--hue);
+  stroke: var(--dk-paper);
+  stroke-width: 2;
+}
+
+.rel-label rect {
+  fill: var(--dk-night);
+  stroke: var(--dk-paper);
+  stroke-width: 2;
+}
+
+.rel-label text {
+  font-family: var(--dk-face);
+  font-size: 25px;
+  font-weight: 600;
+  fill: var(--dk-paper);
+}
+
+/* The cap turns by its grip (--tw) and lifts away (--cx, --cy, --cr). */
+.rel-cap {
+  transform: translate(calc(var(--cx, 0) * 1px), calc(var(--cy, 0) * 1px)) rotate(calc(var(--cr, 0) * 1deg));
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+.rel-cap__body {
+  fill: var(--dk-night);
+}
+
+.rel-cap__grip {
+  transform: translateX(calc(var(--tw, 0) * 1px));
+}
+
+.rel-cap__ridge {
+  stroke: var(--dk-paper);
+  stroke-width: 2;
+  opacity: var(--d, 0);
+}
+
+/* A drop falls by --y and flattens (--sx, --sy) about its foot. */
+.rel-drop {
+  transform: translate(0, calc(var(--y, 0) * 1px)) scale(var(--sx, 1), var(--sy, 1));
+}
+
+/* A panel opens about its middle, in its part's colour: a tint and a 3 px edge that keeps its width as it opens. */
+.rel-panel {
+  transform: scale(var(--sx, 1), var(--sy, 1));
+}
+
+.rel-panel rect {
+  fill: var(--hue);
+  fill-opacity: var(--dk-tint-idle);
+  stroke: var(--hue);
+  stroke-width: 3;
+  vector-effect: non-scaling-stroke;
+}
+
+/* A panel's drawing comes up as it fills (--k); its lines draw on (--d). The fade is on a group inside the part, because the part's own opacity is set whenever the slide shows or clears its parts. */
+.rel-panel-art__fade {
+  opacity: var(--k, 0);
+}
+
+/* A small page in the design panel's binders. */
+.rel-mini-sheet {
+  fill: var(--dk-night);
+  stroke: var(--dk-soft);
+  stroke-width: 2;
+}
+
+/* Slide 30. A package: an opaque white box under its colour's tint, so what is inside it is hidden, and its edge in its colour. A drawn one's box comes up as its edge draws (--d). */
+.rel-pack__ground {
+  fill: var(--dk-night);
+}
+
+.rel-pack__tint {
+  fill: var(--hue);
+  fill-opacity: var(--dk-tint-idle);
+}
+
+.rel-pack__ground--drawn {
+  opacity: min(1, calc(var(--d, 0) * 3));
+}
+
+.rel-pack__edge {
+  fill: none;
+  stroke: var(--hue);
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+/* A flap turns open about its hinge (--r); it is there once drawn (--d). */
+.rel-flap {
+  transform: rotate(calc(var(--r, 0) * 1deg));
+}
+
+.rel-flap__body {
+  fill: var(--dk-night);
+  stroke: var(--hue);
+  stroke-width: 3;
+  opacity: var(--d, 0);
+}
+
+/* One of the package's contents: a white card with its edge in the pack's colour. */
+.rel-card {
+  fill: var(--dk-night);
+  stroke: var(--hue);
+  stroke-width: 2.5;
+}
+
+/* A coding tool's window: a slate frame. */
+.rel-frame {
+  fill: none;
+  stroke: var(--dk-soft);
+  stroke-width: 2.5;
+}
+
+/* Slide 31. The catalog's grid: its grey page, the feet of the row above, its edge in the catalog's colour, all coming up as the frame draws (--d). */
+.rel-catalog-ground {
+  fill: var(--dk-raised);
+  opacity: var(--d, 0);
+}
+
+.rel-catalog-edge {
+  fill: none;
+  stroke: var(--hue);
+  stroke-width: 3;
+}
+
+.rel-card-ground {
+  fill: var(--dk-night);
+  opacity: var(--k, 0);
+}
+
+.rel-card-ground--peek {
+  stroke: var(--dk-rule);
+  stroke-width: 2;
+  opacity: var(--d, 0);
+}
+
+.rel-card-edge {
+  fill: none;
+  stroke: var(--dk-rule);
+  stroke-width: 2;
+}
+
+/* A card's chip, title and description: shapes, never words, coming up as the card fills (--k). */
+.rel-catalog-chip {
+  fill: var(--hue);
+  opacity: calc(var(--k, 0) * 0.25);
+}
+
+.rel-card-title {
+  fill: var(--dk-paper);
+  opacity: calc(var(--k, 0) * 0.85);
+}
+
+.rel-card-text {
+  fill: var(--dk-soft);
+  opacity: calc(var(--k, 0) * 0.45);
+}
+
+.rel-slot-name {
+  position: relative;
+  font-family: var(--dk-face);
+  font-size: var(--dk-text);
+  font-weight: 600;
+  color: var(--dk-paper);
+}
+
+.rel-stack-name {
+  font-weight: 600;
+}
+
+/* Slide 32. A binder's cover tint comes up as its edge draws (--d); a tab is a pink tab with navy words; a page is white. */
+.rel-cover-tint {
+  fill: var(--hue);
+  fill-opacity: var(--dk-tint-idle);
+  opacity: var(--d, 0);
+}
+
+.rel-tab {
+  fill: var(--hue);
+  fill-opacity: 0.3;
+  stroke: var(--hue);
+  stroke-width: 2.5;
+}
+
+.rel-sheet {
+  fill: var(--dk-night);
+  stroke: var(--dk-soft);
+  stroke-width: 2;
+}
+
+/* A brand swatch: ours in each colour of our brand (--hue); yours in the team's own, coming up as the page is filled in (--k). */
+.rel-swatch {
+  fill: var(--hue);
+}
+
+.rel-swatch--yours {
+  opacity: var(--k, 0);
+}
+
+.rel-binder-name {
+  font-weight: 600;
+}
+
+/* Slide 33. The "Planned" tag pinned across the table's corner: a white ground, so the table's edge does not run through its word. The outline's svg is positioned, so the tag holds its own stack and the svg sits under the word. */
+.rel-planned .dk-tag {
+  z-index: 0;
+}
+
+.rel-planned .dk-tag svg {
+  z-index: -1;
+}
+
+.rel-planned .dk-tag rect {
+  fill: var(--dk-night);
+}
+
+/* Slide 33. The table from above, its tint coming up as its edge draws (--d); a laptop's white screen; the tool on it taking shape (--d lines, --k fills). */
+.rel-table {
+  fill: var(--hue);
+  fill-opacity: var(--dk-tint-idle);
+  opacity: min(1, calc(var(--d, 0) * 2));
+}
+
+/* Its edge stays 3 px on screen while slide 33a shrinks the table (--s): the stroke grows as the scale falls. */
+.rel-table-edge {
+  stroke-width: calc(3px / var(--s, 1));
+}
+
+.rel-screen {
+  fill: var(--dk-night);
+  opacity: var(--d, 0);
+}
+
+.rel-tool-line {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+}
+
+.rel-tool-line--soft {
+  stroke: var(--dk-soft);
+  stroke-width: 2;
+}
+
+.rel-tool-fill {
+  fill: var(--dk-paper);
+  opacity: var(--k, 0);
+}
+
+.rel-tool-fill--soft {
+  fill: var(--dk-soft);
+}
+
+.rel-tool-bar {
+  transform: scaleY(var(--k, 0));
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+
+/* The Austin team's helper: a figure in help's sky. */
+.rel-helper {
+  stroke-width: 3;
+}
+
+/* Slide 33a. A small table there whole, where slide 33's table lands as it shrinks. */
+.rel-table--whole {
+  opacity: 1;
+}
+
+/* A department: a navy circle on white, like slide 27's, that draws on (--d), its ground and its name coming up as it draws. */
+.rel-disc circle {
+  fill: var(--dk-night);
+  fill-opacity: var(--d, 1);
+  stroke: var(--dk-paper);
+  stroke-width: 3;
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - var(--d, 1));
+  stroke-opacity: min(1, calc(var(--d, 1) * 100));
+}
+
+/* Austin's line to a department that is ready now: it thins from 3 px to 2 px (--thin) as it fades, once that department's own table lights. */
+.rel-tie {
+  stroke-width: calc(3px - 1px * var(--thin, 0));
+}

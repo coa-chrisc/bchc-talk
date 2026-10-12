@@ -1,0 +1,233 @@
+/* The speaker's screen. One column for a phone held upright: the clock, the
+   note in large type, what comes next, and the controls at the bottom where
+   a thumb reaches, clear of the home indicator. A wide window puts what
+   comes next beside the note. Printed, only the script shows. */
+
+html:has(.deck-notes) {
+  scrollbar-gutter: auto;
+}
+
+.deck-notes {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background: var(--color-night);
+  color: var(--color-paper);
+  /* No zoom on a double tap, so a fast pair of taps is never a gesture. */
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+}
+
+.deck-notes__bar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: calc(0.75rem + env(safe-area-inset-top)) calc(1.25rem + env(safe-area-inset-right)) 0.75rem calc(1.25rem + env(safe-area-inset-left));
+  border-bottom: 1px solid var(--color-line);
+}
+
+.deck-notes__bar p {
+  margin: 0;
+}
+
+.deck-notes__time {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.deck-notes__time strong {
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.deck-notes__time span,
+.deck-notes__place {
+  font-size: 1rem;
+  color: var(--color-paper-soft);
+}
+
+/* A remote that is not connected says so in the bar's full colour, and its controls dim: a tap now would go nowhere. */
+.deck-notes[data-remote]:not([data-remote="connected"]) .deck-notes__link {
+  color: var(--color-paper);
+  font-weight: 600;
+}
+
+.deck-notes[data-remote]:not([data-remote="connected"]) .deck-notes__controls button {
+  opacity: 0.45;
+}
+
+.deck-notes__body {
+  overflow-y: auto;
+  padding: 1.25rem calc(1.25rem + env(safe-area-inset-right)) 1.25rem calc(1.25rem + env(safe-area-inset-left));
+  overscroll-behavior: contain;
+}
+
+.deck-notes__title {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--color-paper-soft);
+}
+
+.deck-notes__note {
+  margin: 0 0 1.5rem;
+  font-size: clamp(1.375rem, 1.1rem + 1.4vw, 2rem);
+  line-height: 1.45;
+  white-space: pre-line;
+}
+
+.deck-notes__next {
+  margin: 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-line);
+  font-size: 1.125rem;
+  line-height: 1.4;
+}
+
+.deck-notes__next span {
+  display: block;
+  font-size: 0.875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-paper-soft);
+}
+
+.deck-notes__controls {
+  display: grid;
+  grid-template-columns: 1fr 2.4fr;
+  gap: 0.75rem;
+  padding: 0.75rem calc(1rem + env(safe-area-inset-right)) calc(0.75rem + env(safe-area-inset-bottom)) calc(1rem + env(safe-area-inset-left));
+  border-top: 1px solid var(--color-line);
+}
+
+.deck-notes__controls button {
+  border: 1px solid var(--color-line-strong);
+  border-radius: 10px;
+  background: none;
+  color: var(--color-paper);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Pressed, from the touch itself: the button answers before the deck does. */
+.deck-notes__controls button[data-pressed] {
+  background: var(--color-night-raised);
+}
+
+.deck-notes__controls .deck-notes__forward[data-pressed] {
+  border-color: var(--color-paper-soft);
+  background: var(--color-paper-soft);
+}
+
+.deck-notes__back {
+  min-height: 72px;
+  font-size: 1.125rem;
+}
+
+.deck-notes__controls .deck-notes__forward {
+  min-height: 112px;
+  border-color: var(--color-paper);
+  background: var(--color-paper);
+  color: var(--color-night);
+  font-size: 1.5rem;
+}
+
+.deck-notes__back {
+  align-self: end;
+}
+
+.deck-notes__controls .deck-notes__minor {
+  min-height: 44px;
+  border-color: var(--color-line);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-paper-soft);
+}
+
+.deck-notes__script {
+  display: none;
+}
+
+@media (min-width: 60rem) {
+  .deck-notes__body {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 0 3rem;
+    align-content: start;
+    padding-block: 2rem;
+  }
+
+  .deck-notes__title {
+    grid-column: 1 / -1;
+  }
+
+  .deck-notes__next {
+    padding: 0 0 0 2rem;
+    border-top: 0;
+    border-left: 1px solid var(--color-line);
+  }
+
+  .deck-notes__controls {
+    grid-template-columns: 12rem 24rem 10rem 10rem;
+    align-items: end;
+  }
+
+  .deck-notes__controls .deck-notes__forward {
+    min-height: 80px;
+  }
+}
+
+@media print {
+  .deck-notes {
+    position: static;
+    display: block;
+    background: none;
+    color: #000;
+  }
+
+  .deck-notes__bar,
+  .deck-notes__body,
+  .deck-notes__controls {
+    display: none;
+  }
+
+  .deck-notes__script {
+    display: block;
+    font-size: 11pt;
+    line-height: 1.5;
+  }
+
+  .deck-notes__script h2 {
+    margin: 1.5em 0 0.5em;
+    font-size: 15pt;
+  }
+
+  .deck-notes__script article {
+    margin-bottom: 1em;
+    padding-top: 0.5em;
+    border-top: 0.5pt solid #999;
+    break-inside: avoid;
+  }
+
+  .deck-notes__script h3 {
+    margin: 0 0 0.25em;
+    font-size: 11pt;
+  }
+
+  .deck-notes__script p {
+    margin: 0;
+    white-space: pre-line;
+  }
+}

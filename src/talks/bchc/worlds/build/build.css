@@ -1,0 +1,452 @@
+/* Part 3's own drawing, in stage pixels and under kit.css's rules. A part's
+   state arrives as the kit's custom properties (--d drawn, --k filled,
+   --solid finished), so the same values always draw the same picture, and
+   what moves moves by transform and opacity. Orange is only the mark of a
+   person approving (.bw-approves); the deep pass green is only the passed
+   tick (.bw-tick). The process green fills what agents build. */
+
+/* Placing: every drawing is a small SVG in stage pixels, every word is set HTML. */
+
+.bw-pic {
+  position: absolute;
+}
+
+.bw-pic svg {
+  display: block;
+  overflow: visible;
+}
+
+.bw-words {
+  position: absolute;
+  margin: 0;
+  font-family: var(--dk-face);
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--dk-paper);
+  white-space: nowrap;
+}
+
+.bw-words__line {
+  display: block;
+}
+
+.bw-words--label {
+  font-size: var(--dk-label);
+}
+
+.bw-words--text {
+  font-size: var(--dk-text);
+}
+
+.bw-words--name {
+  font-size: 40px;
+  font-weight: 600;
+}
+
+.bw-words--big {
+  font-size: 48px;
+  font-weight: 600;
+}
+
+/* A name set over the board: on white, so a cell or an outline never runs through it. */
+.bw-words--tag {
+  margin-left: -6px;
+  padding: 0 6px;
+  background: var(--dk-night);
+}
+
+/* Agents: each kind its own shape in navy, edged white so it reads over a filled cell. The lead agents alone are gold: the deck's agent ring round a gold body. */
+
+.bw-shape {
+  fill: var(--dk-paper);
+  stroke: var(--dk-night);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  paint-order: stroke;
+}
+
+.bw-shape[data-kind="lead"] {
+  fill: var(--dk-lead);
+}
+
+.bw-lead__arc {
+  fill: none;
+  stroke: var(--dk-lead);
+  stroke-linecap: round;
+}
+
+/* The two marks with colours of their own. */
+
+.bw-tick__badge {
+  fill: var(--dk-pass);
+}
+
+.bw-tick__mark {
+  fill: none;
+  stroke: var(--dk-night);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.bw-approves__ring {
+  fill: var(--dk-night);
+  stroke: var(--dk-human);
+  stroke-width: 3.5;
+}
+
+.bw-approves__dot {
+  fill: var(--dk-human);
+}
+
+/* Lines and outlines, in navy and the rule grey. */
+
+.bw-ink,
+.bw-figure,
+.bw-arrow path {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.bw-ink--heavy {
+  stroke-width: 4;
+}
+
+.bw-arrow path {
+  stroke-width: 3;
+}
+
+/* A thin line from an agent on the board to its name. */
+.bw-leader {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 1.5;
+  stroke-opacity: var(--dk-tint-active);
+}
+
+.bw-rule {
+  fill: none;
+  stroke: var(--dk-rule);
+  stroke-width: 2;
+}
+
+.bw-rule--edge {
+  stroke-width: 2.5;
+}
+
+.bw-frame {
+  fill: var(--dk-night);
+  stroke: var(--dk-rule);
+  stroke-width: 2;
+}
+
+.bw-frame--ink {
+  stroke: var(--dk-paper);
+  stroke-width: 2.5;
+}
+
+.bw-step-box {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 3;
+}
+
+.bw-agent-box {
+  fill: none;
+  stroke: var(--dk-process);
+  stroke-width: 3;
+}
+
+.bw-focus {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 3;
+}
+
+.bw-wave,
+.bw-plan,
+.bw-dashed,
+.bw-failed {
+  stroke-width: 2.5;
+  stroke-dasharray: 10 7;
+}
+
+.bw-wave,
+.bw-dashed {
+  fill: none;
+  stroke: var(--dk-paper);
+}
+
+.bw-failed {
+  fill: var(--dk-night);
+  stroke: var(--dk-paper);
+}
+
+.bw-failed--big {
+  stroke-width: 3;
+}
+
+.bw-plan {
+  fill: none;
+  stroke: var(--dk-process);
+  stroke-width: 3;
+}
+
+.bw-plan-line {
+  fill: none;
+  stroke: var(--dk-process);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.bw-desk {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.bw-road {
+  fill: none;
+  stroke: var(--dk-night);
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+
+.bw-cursor {
+  fill: var(--dk-paper);
+  stroke: var(--dk-night);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+/* Fills. A fill that grows does so by its --k, as a scale from its left edge. */
+
+.bw-fill {
+  transform: scaleX(var(--k, 0));
+  transform-origin: left;
+  transform-box: fill-box;
+}
+
+.bw-process {
+  fill: var(--dk-process);
+}
+
+.bw-process-soft {
+  fill: var(--dk-process);
+  fill-opacity: var(--dk-tint-active);
+}
+
+.bw-catalog {
+  fill: var(--dk-catalog);
+}
+
+.bw-paper-fill,
+.bw-binder,
+.bw-specimen {
+  fill: var(--dk-paper);
+}
+
+.bw-raised,
+.bw-well {
+  fill: var(--dk-raised);
+}
+
+.bw-edge {
+  stroke: var(--dk-rule);
+  stroke-width: 2;
+}
+
+.bw-rule-fill {
+  fill: var(--dk-rule);
+}
+
+.bw-soft-fill,
+.bw-wrong {
+  fill: var(--dk-soft);
+}
+
+.bw-white {
+  fill: var(--dk-night);
+}
+
+.bw-swatch {
+  fill: var(--hue);
+}
+
+.bw-specimen {
+  font-family: var(--dk-face);
+  font-weight: 600;
+}
+
+.bw-module {
+  fill: var(--dk-process);
+  fill-opacity: var(--dk-tint-active);
+  stroke: var(--dk-process);
+  stroke-width: 2;
+}
+
+/* The shelf's rows past the six named ones: there are more kinds than these. */
+.bw-more svg {
+  opacity: 0.4;
+}
+
+/* 18: the day's frame on the calendar. */
+.bw-today {
+  position: absolute;
+  box-sizing: border-box;
+  border: 4px solid var(--dk-paper);
+  border-radius: 14px;
+}
+
+/* 14a and 22: a dot carrying what is read or written. */
+.bw-dot {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--dk-paper);
+}
+
+.bw-dot--small {
+  width: 14px;
+  height: 14px;
+}
+
+/* 14a: a folder, its label on the spine. */
+.bw-folder {
+  position: absolute;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding-left: 24px;
+  border: 2.5px solid var(--dk-paper);
+  border-radius: 6px;
+  background: var(--dk-night);
+  font-family: var(--dk-face);
+  font-size: var(--dk-label);
+  font-weight: 500;
+  color: var(--dk-paper);
+  white-space: nowrap;
+}
+
+.bw-folder::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 16px;
+  width: 120px;
+  height: 12px;
+  box-sizing: border-box;
+  border: 2.5px solid var(--dk-paper);
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  background: var(--dk-night);
+}
+
+/* 15: the design system's band, indigo over green, passing down a sketch. */
+.bw-band {
+  position: absolute;
+  box-sizing: border-box;
+  border-top: 8px solid var(--dk-catalog);
+  background: var(--dk-process);
+}
+
+/* 20: the line an agent runs down a screenshot as it compares it. */
+.bw-scan {
+  position: absolute;
+  height: 5px;
+  background: var(--dk-paper);
+}
+
+/* 22: a lesson's bar, lit as the new session reads it. */
+.bw-reading {
+  position: absolute;
+  border-radius: 4px;
+  background: var(--dk-process);
+  transform-origin: top;
+}
+
+/* 22a: the week's outline in the year. */
+.bw-outline {
+  position: absolute;
+  box-sizing: border-box;
+  border: 3px solid var(--dk-paper);
+  border-radius: 8px;
+}
+
+/* The board: a layer of its own, carried small and into the year by transform alone. */
+
+.bw-layer {
+  position: absolute;
+  transform-origin: 0 0;
+}
+
+.bw-origin,
+.bw-row {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.bw-cell {
+  position: absolute;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 2px solid var(--dk-rule);
+  border-radius: 4px;
+  background: var(--dk-night);
+}
+
+.bw-cell--row {
+  border-radius: 7px;
+}
+
+.bw-cell__fill {
+  position: absolute;
+  inset: 0;
+  background: var(--dk-process);
+  opacity: var(--dk-tint-active);
+  transform: scaleX(var(--k, 0));
+  transform-origin: left;
+}
+
+/* 22a: a sprint's block. Done is solid green; being built fills, then turns solid as it finishes; planned is grey. */
+
+.bw-block {
+  position: absolute;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--dk-raised);
+}
+
+.bw-block--done {
+  background: var(--dk-process);
+}
+
+.bw-block__fill {
+  position: absolute;
+  inset: 0;
+  background: var(--dk-process);
+  opacity: calc(var(--dk-tint-active) + (1 - var(--dk-tint-active)) * var(--solid, 0));
+  transform: scaleX(var(--k, 0));
+  transform-origin: left;
+}
+
+/* 22b: the process ring, stroked on in the process green, and each step's pill on it, white so the line stops at its edge. */
+
+.bw-ring {
+  fill: none;
+  stroke: var(--dk-process);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.bw-ring-step {
+  fill: var(--dk-night);
+  stroke: var(--dk-process);
+  stroke-width: 4;
+}

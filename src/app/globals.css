@@ -1,0 +1,72 @@
+/*
+ * The page under the deck. Tailwind's preflight (its browser reset) is the
+ * ground the deck was built and tuned on, so it stays; no utility classes are
+ * generated. The slides themselves are styled by the kit (kit.css) in
+ * Austin Public Health's colours; what is set here is read by the deck's
+ * panels (the start screen, the overview) and the speaker notes.
+ */
+@layer theme, base;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+
+:root {
+  --color-night: #0b1020;
+  --color-night-raised: #121936;
+  --color-paper: #f6f1e7;
+  /* About 10:1 on night; for secondary text. */
+  --color-paper-soft: #c3bfb8;
+  --color-accent: #ff8c5a;
+  --color-line: rgb(246 241 231 / 0.16);
+  --color-line-strong: rgb(246 241 231 / 0.32);
+
+  /* Geist throughout (layout.tsx loads it as --font-geist). */
+  --font-display: var(--font-geist), "Helvetica Neue", Arial, sans-serif;
+  --font-sans: var(--font-geist), "Helvetica Neue", Arial, sans-serif;
+
+  --ease-out-soft: cubic-bezier(0.2, 0.65, 0.3, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    background-color: var(--color-night);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-night);
+    color: var(--color-paper);
+    font-family: var(--font-sans);
+    font-size: 1.1875rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
+  }
+
+  p {
+    text-wrap: pretty;
+    overflow-wrap: anywhere;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-night);
+  }
+}

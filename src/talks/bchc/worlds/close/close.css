@@ -1,0 +1,30 @@
+/* Part 7's own marks, under the kit's rules (kit.css). */
+
+/* The disc a landed agent sits on: the ground's navy, so the agent's white
+   body and green ring read on a white still. */
+.close-disc {
+  fill: var(--dk-night);
+}
+
+/* A still not yet captured: the mount's white tile, with a navy rule where
+   a slide's title would sit. */
+.close-blank {
+  position: absolute;
+  background: var(--dk-ink);
+}
+
+/* The label, set to end at the grid's right edge, by its agent. */
+.close-label {
+  text-align: right;
+}
+
+/* Slide 1 at the size of the stage, carried and scaled about its top left
+   (kit.css `.dk-move`) into the grid's first cell. */
+.close-hero {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+  transform-origin: 0 0;
+}

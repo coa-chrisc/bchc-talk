@@ -1,0 +1,569 @@
+/* The kit's later parts, in the same stage pixels and under the same rules
+   as kit.css: the wipe, the row of stations and its card, the persistent
+   layer's time rule and ledger, the smaller figures, dashed marks and
+   ink. Orange is used once here, for the station where a person decides,
+   and for the words that say so. */
+
+/* A part that opens and shuts by its clip. --wt, --wr, --wb and --wl are how
+   much of each side is drawn in, in percent: all 0 is open, and `wipe` and
+   `unwipe` (verbs.ts) say which sides close. */
+.dk-wipe {
+  clip-path: inset(calc(var(--wt, 0) * 1%) calc(var(--wr, 0) * 1%) calc(var(--wb, 0) * 1%) calc(var(--wl, 0) * 1%));
+}
+
+/* Type */
+
+.dk-set--large,
+.dk-set--quote,
+.dk-set--medium {
+  font-family: var(--dk-face);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.dk-set--large {
+  font-size: 96px;
+  font-weight: 700;
+  line-height: 1.06;
+}
+
+/* A sentence somebody said: large, and still under the title's 72. */
+.dk-set--quote {
+  font-size: 64px;
+  line-height: 1.1;
+}
+
+.dk-set--medium {
+  font-size: 48px;
+  line-height: 1.16;
+}
+
+/* File paths and anything else that is typed, not written. A system face: it needs no loading. */
+.dk-mono {
+  font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--dk-label);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* A figure at 56: the ledger's totals, a small Counter. */
+.dk-figure {
+  display: inline-block;
+  font-family: var(--dk-face);
+  font-size: 56px;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--dk-paper);
+  text-align: right;
+}
+
+/* The words that say a person decided: the only text that takes orange. */
+.dk-human-text {
+  color: var(--dk-human);
+}
+
+/* Stations */
+
+.dk-stations {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+}
+
+.dk-well {
+  fill: none;
+  stroke: var(--dk-rule);
+  stroke-width: 2;
+}
+
+/* Lit differs by shape as well as tone: a heavier outline, and a bar under the heading. */
+.dk-well--lit {
+  stroke: var(--dk-paper);
+  stroke-width: 4;
+}
+
+.dk-well--lit,
+.dk-station__lit {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.dk-well--human {
+  stroke: var(--dk-human);
+  stroke-width: 3.5;
+}
+
+/* The station where work goes live in the catalog: its outline is the catalog's, lit or not. */
+.dk-well--catalog {
+  stroke: var(--dk-catalog);
+}
+
+/* Shut and unlit until a step says otherwise: a part no step moves has no
+   state set on it, so what it is here is what it is all talk. */
+.dk-well__done {
+  --wr: 100;
+  position: absolute;
+  border-radius: 6px;
+  background: var(--dk-raised);
+}
+
+.dk-station__head {
+  position: absolute;
+  font-family: var(--dk-face);
+  font-size: var(--dk-text);
+  font-weight: 500;
+  line-height: 40px;
+  color: var(--dk-soft);
+  white-space: nowrap;
+}
+
+.dk-station__lit {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--dk-paper);
+}
+
+.dk-station__lit::after {
+  position: absolute;
+  right: 0;
+  bottom: -4px;
+  left: 0;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--dk-paper);
+  content: "";
+}
+
+.dk-card {
+  position: absolute;
+  border-radius: 6px;
+  background: var(--dk-paper);
+}
+
+/* A card landed in the catalog takes its 3 px edge, there whole unless a step brings it up (--landed). */
+.dk-card[data-landed]::after {
+  position: absolute;
+  inset: 0;
+  border: 3px solid var(--dk-catalog);
+  border-radius: 6px;
+  opacity: var(--landed, 1);
+  content: "";
+}
+
+/* The card's face: a small chart of three bars and two lines of writing, so it is the same card at any size. */
+.dk-card i {
+  position: absolute;
+  border-radius: 3px;
+  background: var(--dk-night);
+}
+
+.dk-card__bar {
+  bottom: 12px;
+  width: 7px;
+}
+
+.dk-card__bar:nth-child(1) {
+  left: 16px;
+  height: 12px;
+}
+
+.dk-card__bar:nth-child(2) {
+  left: 28px;
+  height: 24px;
+}
+
+.dk-card__bar:nth-child(3) {
+  left: 40px;
+  height: 17px;
+}
+
+.dk-card__line {
+  left: 64px;
+  height: 6px;
+}
+
+.dk-card__line:nth-child(4) {
+  top: 15px;
+  width: 88px;
+}
+
+.dk-card__line:nth-child(5) {
+  top: 28px;
+  width: 56px;
+}
+
+/* The persistent layer */
+
+.dk-time__build,
+.dk-time__built,
+.dk-time__mark {
+  fill: none;
+  stroke: var(--dk-paper);
+}
+
+.dk-time__build {
+  stroke-width: 6;
+}
+
+.dk-time__built {
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.dk-time__mark {
+  stroke-width: 3;
+}
+
+.dk-ledger {
+  position: absolute;
+  display: flex;
+  align-items: baseline;
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* A total nothing has been counted into yet is drawn faint; it comes to full paper on its first count. */
+.dk-ledger .dk-figure[data-zero] {
+  color: var(--dk-soft);
+  opacity: 0.5;
+}
+
+/* Figures */
+
+.dk-person circle,
+.dk-person path,
+.dk-flag {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dk-ring__edge {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 2.5;
+}
+
+.dk-ring__solid {
+  fill: var(--dk-paper);
+  opacity: var(--k, 0);
+}
+
+/* A filled ring that carries a tick is one that answered: it differs from a hollow one by shape as well as by fill. */
+.dk-ring__tick {
+  fill: none;
+  stroke: var(--dk-night);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: var(--k, 0);
+}
+
+/* The passed tick: the deep green is this mark's alone. */
+.dk-pass-tick__badge {
+  fill: var(--dk-pass);
+}
+
+.dk-pass-tick__mark {
+  fill: none;
+  stroke: var(--dk-night);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Ink, for marks on a mounted picture: the mount stays white on any ground. */
+.dk-ink {
+  fill: none;
+  stroke: var(--dk-ink);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+/* Dashed: a sample, or not real yet. */
+
+.dk-dashed {
+  position: absolute;
+  display: grid;
+  place-items: center;
+}
+
+.dk-dashed svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.dk-dashed rect,
+.dk-dashed path {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 2.5;
+  stroke-dasharray: 10 8;
+}
+
+.dk-dashed--soft rect,
+.dk-dashed--soft path {
+  stroke: var(--dk-soft);
+}
+
+.dk-dashed--ink rect,
+.dk-dashed--ink path {
+  stroke: var(--dk-ink);
+  stroke-width: 3;
+}
+
+.dk-dashed[data-hue] rect,
+.dk-dashed[data-hue] path {
+  stroke: var(--hue);
+}
+
+/* A Line (marks.tsx) in full paper. */
+.dk-line--paper {
+  stroke: var(--dk-paper);
+}
+
+/* A strip of stills behind an artefact's mount */
+
+/* The strip is set out over the mount's 2px border, so a still fills the
+   frame's own box exactly and a place measured on the page lands where it
+   was measured. */
+.dk-artefact__strip {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: calc(100% + 4px);
+}
+
+.dk-artefact__still {
+  position: relative;
+  width: 100%;
+}
+
+/* Marks set over the strip, in the still's own pixels, and cut by the mount as the page is. */
+.dk-artefact__over {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: 0;
+  height: 0;
+}
+
+.dk-artefact__over .dk-marks {
+  overflow: visible;
+}
+
+/* What the page pins to the foot of its window: it holds still while the strip travels under it. */
+.dk-artefact__pinned {
+  position: absolute;
+  bottom: -2px;
+  left: -2px;
+  width: calc(100% + 4px);
+}
+
+/* A strip that travels a long way is its own layer, so scrolling it repaints nothing. */
+.dk-artefact__strip--long {
+  will-change: transform;
+}
+
+/* An ink tab on a ring: the label of a place on a mounted picture, attached to the ink round it. */
+.dk-tab {
+  position: absolute;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 6px;
+  background: var(--dk-ink);
+  font-family: var(--dk-face);
+  font-size: var(--dk-label);
+  font-weight: 500;
+  line-height: 40px;
+  letter-spacing: 0.01em;
+  color: var(--dk-mount);
+  white-space: nowrap;
+}
+
+/* Set by its right edge. */
+.dk-tab--end {
+  transform: translateX(-100%);
+}
+
+/* A tab on two lines: 26 px type on 32 px lines, 72 high with its ground. */
+.dk-tab--stacked {
+  height: auto;
+  padding: 4px 12px;
+  line-height: 32px;
+}
+
+.dk-tab--stacked > span {
+  display: block;
+}
+
+/* Unit marks: one for each thing counted. Lit, a mark is solid. */
+.dk-units {
+  position: absolute;
+}
+
+.dk-units svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+}
+
+.dk-unit {
+  fill: var(--dk-paper);
+  opacity: 0;
+}
+
+.dk-unit[data-on] {
+  opacity: 1;
+}
+
+/* A picture of the catalog: the catalog's 3 px edge, over the mount's border and inside its clip. */
+.dk-artefact__mount[data-edge="catalog"] {
+  border-color: var(--dk-catalog);
+  outline: 3px solid var(--dk-catalog);
+  outline-offset: -3px;
+}
+
+.dk-artefact__source--right {
+  right: 0;
+  left: auto;
+}
+
+.dk-tag {
+  position: relative;
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  font-size: var(--dk-label);
+  letter-spacing: 0.01em;
+  color: var(--dk-soft);
+}
+
+.dk-tag svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.dk-tag rect {
+  fill: none;
+  stroke: var(--dk-soft);
+  stroke-width: 2.5;
+  stroke-dasharray: 10 8;
+}
+
+/* Glyphs: the agent, a module tile, a department and a voice waveform
+   (glyphs.tsx). Paper and rule, or a role's colour (--hue, from data-role or
+   data-hue): never orange, never the pass green. Where a part
+   draws on or fills, an unset --d or --k reads as whole, so a glyph a step
+   only shows is complete; a `draw` or `fill` move starts it from 0. */
+
+.dk-agent__track,
+.dk-agent__fill,
+.dk-tile__edge,
+.dk-dept__ring {
+  fill: none;
+  stroke-dasharray: 1;
+}
+
+.dk-agent__track,
+.dk-tile__edge,
+.dk-dept__ring {
+  stroke-dashoffset: calc(1 - var(--d, 1));
+  stroke-opacity: min(1, calc(var(--d, 1) * 100));
+}
+
+.dk-agent__track {
+  stroke: var(--dk-rule);
+  stroke-width: 3;
+}
+
+/* The ring fills along each arc, from where the arc starts. */
+.dk-agent__fill {
+  stroke: var(--dk-paper);
+  stroke-width: 3;
+  stroke-dashoffset: calc(1 - var(--k, 0));
+  stroke-opacity: min(1, calc(var(--k, 0) * 100));
+}
+
+/* An agent with a role colours its ring's fill, at full strength; its body stays paper. */
+.dk-agent[data-role] .dk-agent__fill {
+  stroke: var(--hue);
+}
+
+.dk-agent__body {
+  fill: var(--dk-paper);
+  opacity: var(--d, 1);
+}
+
+.dk-agent__body--hollow {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 3;
+}
+
+.dk-agent__label,
+.dk-dept__label {
+  opacity: var(--d, 1);
+}
+
+.dk-tile__fill,
+.dk-wave__bar {
+  fill: var(--dk-paper);
+  transform-origin: 50% 50%;
+  transform-box: fill-box;
+}
+
+.dk-tile__fill {
+  fill-opacity: 0.85;
+  transform: scale(var(--k, 1));
+}
+
+.dk-tile__edge {
+  stroke: var(--dk-paper);
+  stroke-width: 2.5;
+}
+
+/* A tile in a role's colour: a small one is solid in it (a mark under 24 px),
+   a large one has its edge in it and its fill at the idle tint. */
+.dk-tile[data-hue] .dk-tile__fill {
+  fill: var(--hue);
+}
+
+.dk-tile[data-hue] .dk-tile__edge {
+  stroke: var(--hue);
+}
+
+.dk-tile[data-hue] .dk-tile__edge + .dk-tile__fill {
+  fill-opacity: var(--dk-tint-idle);
+}
+
+.dk-dept__ring {
+  stroke: var(--dk-rule);
+  stroke-width: 2.5;
+}
+
+.dk-dept--yours .dk-dept__ring {
+  stroke: var(--dk-paper);
+  stroke-width: 3;
+}
+
+/* A department in a role's colour: its ring in it, holding the idle tint as the ring draws. */
+.dk-dept[data-hue] .dk-dept__ring {
+  stroke: var(--hue);
+  fill: var(--hue);
+  fill-opacity: calc(var(--dk-tint-idle) * var(--d, 1));
+}
+
+/* A bar fills from its middle, as a voice's level does. */
+.dk-wave__bar {
+  transform: scaleY(var(--k, 1));
+}

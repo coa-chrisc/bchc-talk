@@ -1,0 +1,433 @@
+/* The start world's own drawings (parts.tsx, parts-figures.tsx), in stage
+   pixels and under the kit's rules: paper (navy), soft, rule and raised on
+   the white ground, and a role's colour where the thing is that role's (the
+   catalog's indigo, the process's green). A part's state arrives as the
+   kit's custom properties (--d draws, --k fills and opens), so the same
+   values always draw the same picture. */
+
+/* A tool: a paper outline with a top bar, and a faint paper ground that fills. */
+.st-tool__edge {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.st-tool__fill {
+  fill: var(--dk-paper);
+  fill-opacity: calc(var(--k, 0) * 0.14);
+}
+
+/* A sheet of public information: a page in the night ground, so a sheet set down on another covers it, edged in soft. */
+.st-sheet__page {
+  fill: var(--dk-night);
+  stroke: var(--dk-soft);
+  stroke-width: 2.5;
+}
+
+.st-sheet__ink {
+  fill: none;
+  stroke: var(--dk-rule);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.st-slip__edge {
+  fill: none;
+  stroke: var(--dk-soft);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.st-service__fill {
+  fill: var(--dk-paper);
+  opacity: calc(var(--k, 0) * 0.85);
+}
+
+/* A dot scales in from its centre as it fills. */
+.st-dot {
+  transform: scale(var(--k, 0));
+  transform-origin: 50% 50%;
+  transform-box: fill-box;
+  fill: var(--dk-paper);
+}
+
+/* A piece of a tool being built, in paper. */
+.st-piece {
+  fill: var(--dk-paper);
+  fill-opacity: 0.85;
+}
+
+.st-line--paper {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+/* A picture's HTML, as one part a step can hide. */
+.st-layer {
+  position: absolute;
+  inset: 0;
+}
+
+/* Every word on these slides is navy. */
+.st-name {
+  fill: var(--dk-paper);
+  color: var(--dk-paper);
+}
+
+/* The step label over a title (35 to 39): the APH deck's small-caps eyebrow, in the label face at its 26 px and in navy, as every word here is. */
+.st-kicker {
+  font-family: var(--dk-face);
+  font-size: var(--dk-label);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* 34: the stair. Each step's face rises out of the floor; its edge draws on; its words sit on its face. */
+.st-stair-face {
+  transform: scaleY(var(--k, 0));
+  transform-origin: 50% 100%;
+  transform-box: fill-box;
+  fill: var(--dk-raised);
+}
+
+.st-stair {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.st-stair-words {
+  padding-top: 28px;
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 44px;
+  text-align: center;
+}
+
+/* 35 and 38: a card. Its white ground comes up as its outline draws. */
+.st-card {
+  fill: var(--dk-night);
+  opacity: var(--d, 0);
+}
+
+.st-card--soft {
+  fill: var(--dk-raised);
+}
+
+.st-card__edge {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 2.5;
+}
+
+.st-card__name {
+  font-family: var(--dk-face);
+  font-size: 30px;
+  font-weight: 600;
+  fill: var(--dk-paper);
+}
+
+/* The posted entry: its name where the catalog's cards have a title bar, and its edge in the catalog's colour once it is in. */
+.st-entry__name {
+  font-family: var(--dk-face);
+  font-size: var(--dk-label);
+  font-weight: 600;
+  fill: var(--dk-paper);
+}
+
+.st-entry__lit {
+  fill: none;
+  stroke: var(--dk-catalog);
+  stroke-width: 3;
+}
+
+.st-field {
+  fill: none;
+  stroke: var(--dk-rule);
+  stroke-width: 2;
+}
+
+/* A bar of writing that fills in from its left. */
+.st-writing {
+  transform: scaleX(var(--k, 0));
+  transform-origin: 0 50%;
+  transform-box: fill-box;
+  fill: var(--dk-soft);
+}
+
+.st-bar {
+  fill: var(--dk-rule);
+}
+
+.st-bar--title {
+  fill: var(--dk-soft);
+}
+
+.st-bar--code {
+  fill: var(--dk-soft);
+  fill-opacity: 0.6;
+}
+
+/* 35's catalog, drawn without words: its frame and its cards' tags in the catalog's colour, an empty slot dashed. */
+.st-catalog {
+  fill: none;
+  stroke: var(--dk-catalog);
+  stroke-width: 3;
+}
+
+.st-entry__edge {
+  fill: var(--dk-night);
+  stroke: var(--dk-rule);
+  stroke-width: 2;
+}
+
+.st-entry__tag {
+  fill: var(--dk-catalog);
+  fill-opacity: var(--dk-tint-active);
+}
+
+.st-slot {
+  fill: none;
+  stroke: var(--dk-catalog);
+  stroke-width: 2.5;
+  stroke-dasharray: 10 8;
+}
+
+/* 36: a laptop, its lid opening up from the hinge (--k), an AI coding tool's window on its screen. */
+.st-lid {
+  transform: scaleY(var(--k, 0));
+}
+
+.st-laptop__base,
+.st-laptop__screen,
+.st-github {
+  fill: var(--dk-paper);
+}
+
+/* 36a: a staff account, a round avatar with a person in it, and the bullets of the request. */
+.st-account {
+  fill: var(--dk-raised);
+  stroke: var(--dk-rule);
+  stroke-width: 2;
+}
+
+.st-account__person,
+.st-bullet {
+  fill: var(--dk-paper);
+}
+
+.st-laptop__window {
+  fill: var(--dk-night);
+}
+
+.st-laptop__bar {
+  stroke: var(--dk-rule);
+  stroke-width: 2;
+}
+
+.st-laptop__dot {
+  fill: var(--dk-rule);
+}
+
+.st-laptop__ask {
+  fill: none;
+  stroke: var(--dk-soft);
+  stroke-width: 2;
+}
+
+.st-laptop__caret {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* 37: the receipt, and its plain tick: navy, as a person's approval is orange and a check's pass is green. */
+.st-receipt {
+  fill: var(--dk-night);
+  stroke: var(--dk-paper);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+}
+
+.st-tick {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* 37's door: solid jambs, a leaf that swings into the room about its hinge, and the thin arc it sweeps. */
+.st-door__jamb {
+  fill: var(--dk-paper);
+}
+
+.st-door__leaf {
+  fill: var(--dk-paper);
+  transform: rotate(calc(var(--k, 0) * -90deg));
+}
+
+.st-door__swing {
+  fill: none;
+  stroke: var(--dk-soft);
+  stroke-width: 2;
+}
+
+/* 38: a change, and the locked Publish button. */
+.st-page {
+  fill: var(--dk-night);
+  stroke: var(--dk-soft);
+  stroke-width: 2;
+}
+
+.st-button {
+  fill: var(--dk-raised);
+  stroke: var(--dk-soft);
+  stroke-width: 2.5;
+}
+
+.st-lock__shackle {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 4;
+}
+
+.st-lock__body {
+  fill: var(--dk-paper);
+}
+
+/* 40: each template's name, and its tag in navy words. */
+.st-template {
+  font-weight: 600;
+}
+
+.st-template .dk-tag {
+  font-weight: 500;
+  color: var(--dk-paper);
+}
+
+/* 41: a tool's window shows its name as it draws; what each tool shows. */
+.st-window__name {
+  opacity: var(--d, 0);
+}
+
+.st-map__edge {
+  fill: none;
+  stroke: var(--dk-rule);
+  stroke-width: 2;
+}
+
+.st-map__road {
+  fill: none;
+  stroke: var(--dk-rule);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.st-pin {
+  fill: var(--dk-paper);
+}
+
+.st-pin__hole {
+  fill: var(--dk-night);
+}
+
+.st-grow {
+  transform: scaleY(var(--k, 0));
+  transform-origin: 50% 100%;
+  transform-box: fill-box;
+  fill: var(--dk-soft);
+}
+
+.st-chart {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* The catalog, small, over your department: its edge and entries in the catalog's colour, your newest tool at the stronger tint. */
+.st-shelf {
+  fill: none;
+  stroke: var(--dk-catalog);
+  stroke-width: 3;
+}
+
+.st-shelf__entry {
+  fill: var(--dk-catalog);
+  fill-opacity: var(--dk-tint-idle);
+  stroke: var(--dk-catalog);
+  stroke-width: 2;
+}
+
+.st-shelf__entry--new {
+  fill-opacity: var(--dk-tint-active);
+}
+
+/* 42: the four requests' drawings. A tag takes its role's colour (--hue) at the active tint; the person whose hand goes up, the pack and the engineer go from the idle tint to the active one as they light (--k). */
+.st-ask__tag {
+  fill: var(--hue);
+  fill-opacity: var(--dk-tint-active);
+  stroke: var(--hue);
+  stroke-width: 2;
+}
+
+.st-ask__tray {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* The hand goes up the arm's reach (--reach) from inside the shoulder, and the arm grows up behind it, as --k goes to 1. */
+.st-ask__arm {
+  transform: scaleY(var(--k, 0));
+}
+
+.st-ask__palm {
+  transform: translateY(calc((1 - var(--k, 0)) * var(--reach, 0px)));
+}
+
+/* The person again, in the card's ground, over the arm's root: it hides where the arm meets the shoulder. */
+.st-ask__under {
+  fill: var(--dk-raised);
+  fill-opacity: 1;
+  stroke: none;
+}
+
+.st-ask__lit {
+  fill: var(--hue);
+  fill-opacity: calc(var(--dk-tint-idle) + var(--k, 0) * (var(--dk-tint-active) - var(--dk-tint-idle)));
+  stroke: var(--hue);
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+.st-ask__handle,
+.st-ask__band {
+  fill: none;
+}
+
+.st-ask__chair {
+  fill: none;
+  stroke: var(--dk-soft);
+  stroke-width: 3;
+}
+
+/* Each request's words, set in the middle of the card's height. */
+.st-ask__words {
+  display: grid;
+  align-content: center;
+  text-wrap: balance;
+}

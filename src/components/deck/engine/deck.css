@@ -1,0 +1,452 @@
+/* The deck's frame. The stage is a fixed 1920 by 1080 surface, scaled as one
+   piece to fit the window and letterboxed on the kit's ground (`--dk-night`,
+   which a step's `ground` can change); everything a
+   scene draws is in its pixels. The panels (gate, overview, readout, chrome,
+   blackout) sit over the window in ordinary screen pixels, outside the
+   scaled stage, so they stay sharp and never move with it. */
+
+html:has(.deck) {
+  overflow: hidden;
+  scrollbar-gutter: auto;
+}
+
+.deck {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  overflow: hidden;
+  background: var(--dk-night);
+  color: var(--color-paper);
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.deck[data-live="true"][data-idle] {
+  cursor: none;
+}
+
+.deck-backdrop {
+  position: absolute;
+  inset: 0;
+}
+
+.deck-stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  transform-origin: 0 0;
+}
+
+.deck-worlds,
+.deck-layer,
+.deck-frame,
+.deck-world {
+  position: absolute;
+  inset: 0;
+}
+
+/* Every world is mounted the whole time. One shows; the rest are hidden and
+   contained, so they cost no layout or paint. The director sets which. */
+.deck-world {
+  contain: strict;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.deck-layer,
+.deck-frame {
+  pointer-events: none;
+}
+
+.deck-blackout {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: #000;
+}
+
+/* Chrome */
+
+.deck-chrome {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 3;
+  pointer-events: none;
+  transition: opacity 0.4s var(--ease-out-soft);
+}
+
+/* At rest the chrome fades, unless a key has moved focus onto one of its buttons. */
+.deck[data-idle] .deck-chrome:not(:has(:focus-visible)) {
+  opacity: 0;
+}
+
+/* The chrome sits on the stage's ground, so it takes the kit's colours. */
+.deck-chrome__progress {
+  height: 2px;
+  background: var(--dk-rule);
+}
+
+.deck-chrome__progress i {
+  display: block;
+  height: 100%;
+  background: var(--dk-soft);
+  transform-origin: 0 50%;
+  transition: transform 0.5s var(--ease-out-expo);
+}
+
+/* The step's number, and the back and forward buttons in the corner beside it. */
+.deck-chrome__corner {
+  position: absolute;
+  right: 0.25rem;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.deck-chrome__counter {
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--dk-soft);
+}
+
+.deck-chrome__typed,
+.deck-chrome__link {
+  color: var(--dk-paper);
+}
+
+.deck-chrome__steps {
+  display: flex;
+}
+
+/* A small chevron in a full 44 px target. Faded, it still takes the click
+   where it was last seen, so a viewer clicking back again without moving
+   the pointer keeps going back; only the cursor stays hidden. */
+.deck-chrome__step {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--dk-soft);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.deck-chrome__step:hover:not([aria-disabled="true"]) {
+  color: var(--dk-paper);
+}
+
+.deck-chrome__step[aria-disabled="true"] {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.deck-chrome__step:focus-visible {
+  outline: 1px solid var(--dk-soft);
+  outline-offset: -4px;
+}
+
+.deck[data-idle] .deck-chrome__step {
+  cursor: none;
+}
+
+.deck-chrome__step svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* How to pair a phone, above the counter, until one has. */
+.deck-chrome__pairing {
+  position: absolute;
+  right: 1rem;
+  bottom: 3.25rem;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.875rem;
+  width: min(26rem, calc(100% - 2rem));
+  padding: 0.75rem;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 6px;
+  background: var(--color-night);
+}
+
+.deck-chrome__pairing .deck-qr {
+  width: 7rem;
+}
+
+.deck-chrome__pairing p {
+  min-width: 0;
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--color-paper-soft);
+}
+
+.deck-chrome__pairing span {
+  display: block;
+  color: var(--color-paper);
+  overflow-wrap: anywhere;
+}
+
+/* A QR code is always dark on white, with its own clear margin drawn in. */
+.deck-qr {
+  flex: none;
+  display: block;
+  width: 11rem;
+  height: auto;
+  border-radius: 4px;
+}
+
+/* Gate */
+
+.deck-gate,
+.deck-overview {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  overflow: auto;
+  background: var(--color-night);
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.deck-gate {
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+}
+
+.deck-gate__panel {
+  width: min(44rem, 100%);
+}
+
+.deck-gate__eyebrow {
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-paper-soft);
+}
+
+.deck-gate__title {
+  margin: 0 0 1.5rem;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 1.4rem + 2vw, 3.25rem);
+  font-weight: 400;
+  line-height: 1.08;
+}
+
+.deck-gate__checks {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  list-style: none;
+  font-size: 1.0625rem;
+}
+
+.deck-gate__checks li {
+  display: flex;
+  gap: 0.75rem;
+  color: var(--color-paper-soft);
+}
+
+.deck-gate__checks li[data-ok="true"] {
+  color: var(--color-paper);
+}
+
+.deck-gate__checks span {
+  width: 1rem;
+}
+
+.deck-gate__warning {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 6px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.deck-gate__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.deck-gate__start {
+  min-width: 10rem;
+  padding: 0.875rem 2rem;
+  border: 0;
+  border-radius: 6px;
+  background: var(--color-paper);
+  color: var(--color-night);
+  font: inherit;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.deck-gate__start:disabled {
+  background: var(--color-line-strong);
+  color: var(--color-paper-soft);
+  cursor: default;
+}
+
+.deck-gate__toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  color: var(--color-paper-soft);
+}
+
+/* The phone remote: a single control until it is asked for, then the code to scan and the address beside it. */
+.deck-gate__remote {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem;
+  margin: 0 0 1.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-paper-soft);
+}
+
+.deck-gate__remote p {
+  flex: 1 1 16rem;
+  min-width: 0;
+  margin: 0;
+}
+
+.deck-gate__remote p span {
+  display: block;
+  margin-top: 0.5rem;
+}
+
+.deck-gate__remote .deck-gate__address {
+  color: var(--color-paper);
+  overflow-wrap: anywhere;
+}
+
+.deck-gate__ask {
+  margin-right: 0.75rem;
+  padding: 0.625rem 1.125rem;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 6px;
+  background: none;
+  color: var(--color-paper);
+  font: inherit;
+  cursor: pointer;
+}
+
+.deck-gate__keys {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-paper-soft);
+}
+
+/* Overview */
+
+.deck-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  gap: 2rem;
+  align-content: start;
+  padding: 2.5rem;
+}
+
+.deck-overview h2 {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.deck-overview ol {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.deck-overview button {
+  display: flex;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.5rem 0.625rem;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: var(--color-paper-soft);
+  font: inherit;
+  font-size: 0.9375rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.deck-overview button span {
+  min-width: 1.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-paper-soft);
+}
+
+.deck-overview button:hover,
+.deck-overview button[aria-current] {
+  background: var(--color-night-raised);
+  color: var(--color-paper);
+}
+
+/* Rehearsal readout */
+
+.deck-hud {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 0.125rem 1rem;
+  margin: 0;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 6px;
+  background: var(--color-night);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+.deck-hud dt {
+  color: var(--color-paper-soft);
+}
+
+.deck-hud dd {
+  margin: 0;
+  text-align: right;
+}
+
+.deck-hud[data-slow="true"] {
+  border-style: dashed;
+  border-color: var(--color-paper);
+}

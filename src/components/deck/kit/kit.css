@@ -1,0 +1,578 @@
+/* The infographic kit, in stage pixels (the stage is 1920 by 1080 and is
+   scaled as one piece). The sizes are for a projector seen from the back of
+   a room: no text under 32px, no label under 26px, rules of 2px or more,
+   dots of 12px or more. Orange belongs to the human mark and to nothing else
+   here. A part's state arrives as custom properties (--d, --k, --pass,
+   --fail), so the same values always draw the same picture. */
+
+/* Austin Public Health's palette (docs/bchc-brand.md). The ground and ink
+   keep the names they had on the old night ground, so every part keeps its
+   role: night is the ground, paper is the words and the strokes drawn in
+   ink. */
+.deck {
+  --dk-night: #ffffff;
+  --dk-raised: #ececf2;
+  --dk-paper: #22254e;
+  --dk-soft: #6b7086;
+  --dk-rule: #dde0ea;
+  --dk-pass: #1f573b;
+  --dk-human: #f4642c;
+  /* A mounted still is white on any ground, and so is what is drawn on it. */
+  --dk-mount: #ffffff;
+  --dk-ink: #22254e;
+  --dk-text: 32px;
+  --dk-label: 26px;
+  /* Geist for everything (src/app/layout.tsx loads it). */
+  --dk-face: var(--font-geist), "Helvetica Neue", Arial, sans-serif;
+
+  /* The accent hues. They are named here and nowhere else: a part is
+     coloured by its role, through the aliases below, and a test keeps the
+     names out of every other file. */
+  --dk-green: #009f4d;
+  --dk-indigo: #44499c;
+  --dk-gold: #e0a100;
+  --dk-pink: #e8559a;
+  --dk-sky: #2f9be3;
+  /* Indigo is the catalog and green the process, everywhere. */
+  --dk-catalog: var(--dk-indigo);
+  --dk-process: var(--dk-green);
+  /* Part 3: the agents' roles. */
+  --dk-lead: var(--dk-gold);
+  --dk-review: var(--dk-sky);
+  --dk-fix: var(--dk-pink);
+  /* Part 4: the departments. */
+  --dk-dept-a: var(--dk-sky);
+  --dk-dept-b: var(--dk-pink);
+  --dk-dept-c: var(--dk-gold);
+  /* Part 5: what we share. */
+  --dk-share-pack: var(--dk-green);
+  --dk-share-code: var(--dk-indigo);
+  --dk-share-design: var(--dk-pink);
+  --dk-share-help: var(--dk-sky);
+  /* Slide 29: the magic sauce the four parts pour from. */
+  --dk-share-sauce: var(--dk-gold);
+  /* Strokes are at full strength; fills are at these fractions, lower than
+     on a dark ground, because a tint on white goes pastel fast. */
+  --dk-tint-idle: 0.12;
+  --dk-tint-active: 0.55;
+  --dk-wash: 0.08;
+}
+
+/* The title and close slides (a step's `ground`): navy, with white words,
+   the catalog in a lighter indigo and the rules in white. The process keeps
+   its green. */
+.deck[data-ground="navy"] {
+  --dk-night: #22254e;
+  --dk-raised: #2e3266;
+  --dk-paper: #ffffff;
+  --dk-soft: #c5c8d9;
+  --dk-rule: rgb(255 255 255 / 0.3);
+  --dk-catalog: #8a8fd0;
+}
+
+/* The ground behind the stage, and behind each world as it fades. */
+.deck {
+  background: var(--dk-night);
+}
+
+/* A part's role (palette.ts), as the colour its own rules paint with: --hue.
+   An agent and a board cell say theirs as data-role, other parts as data-hue. */
+.deck [data-hue="catalog"] {
+  --hue: var(--dk-catalog);
+}
+
+.deck [data-hue="process"],
+.deck [data-role="process"] {
+  --hue: var(--dk-process);
+}
+
+.deck [data-hue="lead"],
+.deck [data-role="lead"] {
+  --hue: var(--dk-lead);
+}
+
+.deck [data-hue="review"],
+.deck [data-role="review"] {
+  --hue: var(--dk-review);
+}
+
+.deck [data-hue="fix"],
+.deck [data-role="fix"] {
+  --hue: var(--dk-fix);
+}
+
+.deck [data-hue="dept-a"] {
+  --hue: var(--dk-dept-a);
+}
+
+.deck [data-hue="dept-b"] {
+  --hue: var(--dk-dept-b);
+}
+
+.deck [data-hue="dept-c"] {
+  --hue: var(--dk-dept-c);
+}
+
+.deck [data-hue="share-pack"] {
+  --hue: var(--dk-share-pack);
+}
+
+.deck [data-hue="share-code"] {
+  --hue: var(--dk-share-code);
+}
+
+.deck [data-hue="share-design"] {
+  --hue: var(--dk-share-design);
+}
+
+.deck [data-hue="share-help"] {
+  --hue: var(--dk-share-help);
+}
+
+.deck [data-hue="share-sauce"] {
+  --hue: var(--dk-share-sauce);
+}
+
+/* A rule in a role's colour: a Line, or a Connector's line and head. */
+.dk-rule[data-hue],
+.dk-connector[data-hue] .dk-rule,
+.dk-connector[data-hue] .dk-connector__head {
+  stroke: var(--hue);
+}
+
+/* Type on the plane is set by its geometry, not hinted for the size it
+   happens to be on screen: under a moving camera its letters keep their
+   spacing, and a step's text is spaced the same however the step was reached. */
+.dk-plane {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  text-rendering: geometricPrecision;
+}
+
+.dk-marks {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+}
+
+/* A part that travels: its place and size are plain numbers, so the same
+   numbers always put it in the same place. */
+.dk-move {
+  transform: translate(calc(var(--x, 0) * 1px), calc(var(--y, 0) * 1px)) scale(var(--s, 1));
+}
+
+.dk-text,
+.dk-label {
+  font-family: var(--dk-face);
+  font-size: var(--dk-text);
+  font-weight: 500;
+  fill: var(--dk-paper);
+  color: var(--dk-paper);
+}
+
+.dk-label {
+  font-size: var(--dk-label);
+  letter-spacing: 0.01em;
+  fill: var(--dk-soft);
+  color: var(--dk-soft);
+}
+
+.dk-rule {
+  fill: none;
+  stroke: var(--dk-rule);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+/* Anything that draws on carries pathLength="1"; --d is how much of it shows.
+   Before any of it has drawn it is not there at all: a round cap would
+   otherwise leave a dot where the line starts. */
+.dk-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - var(--d, 0));
+  stroke-opacity: min(1, calc(var(--d, 0) * 100));
+}
+
+/* Board */
+
+/* The ground and the title come up as the frame draws, so an undrawn board is not there at all. */
+.dk-board__frame {
+  fill: var(--dk-raised);
+  fill-opacity: calc(var(--d, 0) * 0.72);
+  stroke: var(--dk-rule);
+  stroke-width: 2.5;
+}
+
+.dk-board__title {
+  fill: var(--dk-paper);
+  opacity: var(--d, 0);
+}
+
+.dk-cell__well {
+  fill: none;
+  stroke: var(--dk-rule);
+  stroke-width: 2;
+  opacity: calc(1 - var(--fail, 0));
+}
+
+.dk-cell__fill,
+.dk-cell__tint {
+  transform: scaleX(var(--k, 0));
+  transform-origin: 0 50%;
+  transform-box: fill-box;
+}
+
+.dk-cell__fill {
+  fill: var(--dk-paper);
+  opacity: calc(0.92 - var(--fail, 0));
+}
+
+.dk-cell__tint {
+  fill: var(--dk-pass);
+  opacity: var(--pass, 0);
+}
+
+/* A cell an agent holds (data-role: the holder's role) takes the agent's
+   colour in place of paper once it is taken (--hold, 0 to 1, the `take`
+   verb): the whole cell tints at the idle fraction, and the work fills over
+   it at the active one, along --k as the paper fill would. Until it is
+   taken it is the paper cell. A pass still turns it green; a fail empties it. */
+.dk-cell[data-role] .dk-cell__fill {
+  opacity: calc((1 - var(--hold, 0)) * (0.92 - var(--fail, 0)));
+}
+
+.dk-cell__hold,
+.dk-cell__work {
+  fill: var(--hue);
+}
+
+.dk-cell__hold {
+  opacity: calc(var(--hold, 0) * var(--dk-tint-idle) * (1 - var(--fail, 0)));
+}
+
+.dk-cell__work {
+  transform: scaleX(var(--k, 0));
+  transform-origin: 0 50%;
+  transform-box: fill-box;
+  opacity: calc(var(--hold, 0) * var(--dk-tint-active) * (1 - var(--fail, 0)));
+}
+
+.dk-cell__dash {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 2.5;
+  stroke-dasharray: 10 8;
+  opacity: var(--fail, 0);
+}
+
+.dk-cell__tick,
+.dk-cell__cross {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dk-cell__tick {
+  stroke: var(--dk-night);
+  stroke-width: 4.5;
+  opacity: var(--pass, 0);
+}
+
+.dk-cell__cross {
+  stroke: var(--dk-paper);
+  stroke-width: 4;
+  opacity: var(--fail, 0);
+}
+
+.dk-dot {
+  fill: var(--dk-paper);
+  stroke: var(--dk-night);
+  stroke-width: 4;
+}
+
+/* Marks */
+
+.dk-node__box {
+  fill: var(--dk-raised);
+  stroke: var(--dk-rule);
+  stroke-width: 2.5;
+}
+
+.dk-connector__head {
+  fill: none;
+  stroke: var(--dk-rule);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  /* The head arrives with the line's front, in its last twentieth, and never waits ahead of it. */
+  opacity: clamp(0, calc(var(--d, 0) * 20 - 19), 1);
+}
+
+/* A line that carries an answer: full paper, a little heavier than a rule. */
+.dk-connector--paper .dk-rule,
+.dk-connector--paper .dk-connector__head {
+  stroke: var(--dk-paper);
+  stroke-width: 3;
+}
+
+.dk-packet {
+  fill: var(--dk-paper);
+}
+
+/* A glyph riding a line's front (marks.tsx Rider): 44 px semibold, paper. */
+.dk-rider__text {
+  font-family: var(--dk-face);
+  font-size: 44px;
+  font-weight: 600;
+  fill: var(--dk-paper);
+}
+
+.dk-gate__bar {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.dk-gate__bar--a {
+  transform: translateY(calc(var(--k, 0) * -38px));
+}
+
+.dk-gate__bar--b {
+  transform: translateY(calc(var(--k, 0) * 38px));
+}
+
+.dk-human__ring {
+  fill: none;
+  stroke: var(--dk-human);
+  stroke-width: 3.5;
+}
+
+.dk-human__dot,
+.dk-human__label {
+  fill: var(--dk-human);
+}
+
+.dk-human__dot {
+  opacity: clamp(0, calc(var(--d, 0) * 3), 1);
+}
+
+.dk-human__label {
+  opacity: clamp(0, calc(var(--d, 0) * 3 - 2), 1);
+}
+
+.dk-note__region,
+.dk-note__leader {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.dk-note__region {
+  stroke-dashoffset: calc(1 - min(1, var(--d, 0) * 2));
+}
+
+.dk-note__leader {
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - clamp(0, var(--d, 0) * 2 - 1, 1));
+}
+
+.dk-note__label {
+  fill: var(--dk-paper);
+  opacity: clamp(0, calc(var(--d, 0) * 3 - 2), 1);
+}
+
+/* Set text and pictures: HTML on the plane */
+
+.dk-set,
+.dk-block,
+.dk-counter,
+.dk-type,
+.dk-artefact,
+.dk-ticks {
+  position: absolute;
+  margin: 0;
+}
+
+.dk-set {
+  color: var(--dk-paper);
+  white-space: nowrap;
+}
+
+/* Titles are bold, as the APH deck sets them. */
+.dk-set--display,
+.dk-set--title {
+  font-family: var(--dk-face);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.dk-set--display {
+  font-size: 108px;
+  line-height: 1.04;
+}
+
+/* 72, not the night deck's 80: Geist bold is wider than the old serif, and
+   the longest one-line titles must still end inside the safe edge. */
+.dk-set--title {
+  font-size: 72px;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+}
+
+/* Body copy and a slide's story lines (story.tsx): paper, since it must be read, on a 48 px row. */
+.dk-set--text {
+  font-family: var(--dk-face);
+  font-size: var(--dk-text);
+  line-height: 1.5;
+}
+
+/* The mask is deep enough for a descender and is pulled back up by the same amount. */
+.dk-set__mask {
+  display: block;
+  margin-bottom: -0.14em;
+  padding-bottom: 0.14em;
+  overflow: hidden;
+}
+
+.dk-set__line {
+  display: block;
+}
+
+/* A slide title's short green rule, the APH deck's motif: under its last
+   line, so it rises and goes with the title. Slide 1's opening line has
+   none (SetText `rule`). */
+.dk-set--title:not([data-rule="off"]) .dk-set__mask:last-child .dk-set__line::after {
+  display: block;
+  width: 120px;
+  height: 6px;
+  margin-top: 18px;
+  background: var(--dk-green);
+  content: "";
+}
+
+.dk-block {
+  font-family: var(--dk-face);
+  font-size: var(--dk-text);
+  line-height: 1.4;
+  color: var(--dk-paper);
+}
+
+/* Blocks: the variants a scene asks for by name. */
+
+.dk-block--soft {
+  color: var(--dk-soft);
+}
+
+/* A key line: semibold at 48. */
+.dk-block--medium {
+  font-family: var(--dk-face);
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 1.16;
+  letter-spacing: -0.015em;
+}
+
+/* Ink, for words set on a mounted picture. */
+.dk-block--ink {
+  color: var(--dk-ink);
+}
+
+.dk-block--label {
+  font-size: var(--dk-label);
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  color: var(--dk-soft);
+}
+
+.dk-block--line {
+  white-space: nowrap;
+}
+
+.dk-block--row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  white-space: nowrap;
+}
+
+.dk-block--center {
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.dk-block--right {
+  text-align: right;
+}
+
+.dk-block--lines > span {
+  display: block;
+  white-space: nowrap;
+}
+
+/* Lines set in the middle of a box, on its center line: words inside an outline. */
+.dk-block--middle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.dk-counter {
+  display: flex;
+  align-items: baseline;
+  gap: 24px;
+  white-space: nowrap;
+}
+
+.dk-counter__figure {
+  font-family: var(--dk-face);
+  font-size: 108px;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--dk-paper);
+  text-align: right;
+}
+
+.dk-type {
+  display: grid;
+  font-family: var(--dk-face);
+  font-size: var(--dk-text);
+  color: var(--dk-paper);
+  white-space: pre;
+}
+
+.dk-type > * {
+  grid-area: 1 / 1;
+}
+
+.dk-type__full {
+  visibility: hidden;
+}
+
+.dk-artefact__mount {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border: 2px solid var(--dk-rule);
+  border-radius: 6px;
+  background: var(--dk-mount);
+  overflow: hidden;
+}
+
+.dk-artefact__mount img {
+  object-fit: cover;
+  object-position: top;
+}
+
+.dk-artefact__source {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+}

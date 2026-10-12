@@ -1,0 +1,314 @@
+/* Part 4's own marks, under the kit's rules (kit.css, kit-parts.css) and
+   docs/bchc-brand.md: words and outlines in navy (paper) on the white
+   ground, the catalog in indigo, a department's own agents in green, and
+   orange only through the kit's HumanMark, where a person approves. A part's
+   state arrives as the kit's custom properties (--d, --k, --s, --x, --y)
+   and two of this world's: --ox and --oy, the outline's stretch on slide
+   24. Selectors are doubled
+   where they refine a kit class, so the order the sheets load in never
+   decides a picture. */
+
+/* Every word the viewer reads is navy, the kit's label type included. */
+.dk-label.sh-word {
+  fill: var(--dk-paper);
+}
+
+.dk-block--label.sh-word,
+.sh-word.sh-word {
+  color: var(--dk-paper);
+}
+
+.sh-word--name.sh-word--name {
+  font-weight: 600;
+}
+
+/* A slide's HTML as one part, holding no room of its own. */
+.sh-group {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Slide 23's count under the catalog, its two parts on one line. */
+.sh-tally.sh-tally {
+  justify-content: center;
+  gap: 0.3em;
+}
+
+.sh-tally > span {
+  display: inline-block;
+}
+
+/* A tool card. In the catalog: its indigo edge and the idle tint. In a
+   department: a navy edge on the ground. A copy turns from the first into
+   the second, its dashed corner coming with it, as its --k goes to 1. */
+.sh-card__listed {
+  fill: color-mix(in srgb, var(--dk-catalog) calc(var(--dk-tint-idle) * 100%), var(--dk-night));
+  stroke: var(--dk-catalog);
+  stroke-width: 3;
+}
+
+.sh-card__own {
+  fill: var(--dk-night);
+  stroke: var(--dk-paper);
+  stroke-width: 2.5;
+}
+
+.sh-card--copy .sh-card__listed {
+  opacity: calc(1 - var(--k, 0));
+}
+
+.sh-card--copy .sh-card__own,
+.sh-card--copy .sh-corner {
+  opacity: var(--k, 0);
+}
+
+/* An adapted copy's corner: cut back to the ground and redrawn dashed in navy. */
+.sh-corner__cut {
+  fill: var(--dk-night);
+}
+
+.sh-corner__dash {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 2.5;
+  stroke-dasharray: 5 4;
+}
+
+/* A tool's icon: navy lines, the bar chart's bars solid, the pipes heavier. */
+.sh-icon {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sh-icon .sh-icon__solid {
+  fill: var(--dk-paper);
+  stroke: none;
+}
+
+.sh-icon .sh-icon__pipe {
+  stroke-width: 4.5;
+}
+
+/* A department's empty place for a tool: a rule outline. */
+.sh-well {
+  fill: none;
+  stroke: var(--dk-rule);
+  stroke-width: 2;
+}
+
+/* A department: a navy circle that draws on (--d), its ground and its name
+   coming up as it draws. */
+.sh-disc circle {
+  fill: var(--dk-night);
+  fill-opacity: var(--d, 1);
+  stroke: var(--dk-paper);
+  stroke-width: 3;
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - var(--d, 1));
+  stroke-opacity: min(1, calc(var(--d, 1) * 100));
+}
+
+.sh-disc text {
+  opacity: var(--d, 1);
+}
+
+/* Slide 27: a department's name inside its circle, smaller than the label
+   type so the longest fits on two rows (layout-network.ts, NAME). */
+.dk-label.sh-name {
+  font-size: 19px;
+}
+
+/* Slide 24: your department's outline, stretched from its centre as the
+   view pulls back (--ox, --oy), its edge 3 px at every stretch. */
+.sh-pool {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 3;
+  vector-effect: non-scaling-stroke;
+  transform: scale(var(--ox, 1), var(--oy, 1));
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Your department's own tool, and the shared ones that pour in: indigo,
+   each taking its dashed corner as it lands (--k). */
+.sh-own {
+  fill: var(--dk-paper);
+  fill-opacity: 0.85;
+}
+
+/* "Yours" moves with the pool but keeps its label size as the view pulls back (--s, the pool's scale). */
+.dk-label.sh-yours {
+  font-size: calc(var(--dk-label) / var(--s, 1));
+  font-weight: 600;
+}
+
+.sh-tile__body {
+  fill: color-mix(in srgb, var(--dk-catalog) calc(var(--dk-tint-idle) * 100%), var(--dk-night));
+  stroke: var(--dk-catalog);
+  stroke-width: 2.5;
+}
+
+.sh-tile .sh-corner {
+  opacity: var(--k, 0);
+}
+
+/* Slide 25: what your agents rework, each a bar that fills in green from
+   the left (--k). */
+.sh-bar {
+  fill: var(--dk-rule);
+}
+
+.sh-bar__fill {
+  fill: var(--dk-process);
+  transform: scaleX(var(--k, 0));
+  transform-origin: 0 50%;
+  transform-box: fill-box;
+}
+
+/* A badge on a card. */
+.sh-pill {
+  fill: var(--dk-night);
+  stroke: var(--dk-paper);
+  stroke-width: 2.5;
+}
+
+/* The badge flips over (--k): the first face folds shut by half way, then the second opens. */
+.sh-flip {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.sh-flip--from {
+  transform: scaleY(max(0, calc(1 - 2 * var(--k, 0))));
+}
+
+.sh-flip--to {
+  transform: scaleY(max(0, calc(2 * var(--k, 0) - 1)));
+}
+
+/* Slide 26's project card: its name in navy, its description and tags as
+   rule lines; the contact line lit in indigo as its --k goes to 1. */
+.sh-line--name {
+  fill: var(--dk-paper);
+}
+
+.sh-line--text,
+.sh-line--tag {
+  fill: var(--dk-rule);
+}
+
+.sh-contact__off .sh-icon {
+  stroke: var(--dk-soft);
+}
+
+.sh-contact__on {
+  opacity: var(--k, 0);
+}
+
+.sh-contact__on .sh-icon {
+  stroke: var(--dk-catalog);
+}
+
+.sh-contact__bar {
+  fill: var(--dk-catalog);
+}
+
+/* A message's bubble. */
+.sh-bubble {
+  fill: var(--dk-night);
+  stroke: var(--dk-paper);
+  stroke-width: 2.5;
+}
+
+/* Slide 27: a department's heavy line, one path from its vendor through its
+   circle to the middle (pathLength 1), in slate at the weight the layout
+   sets on it. Only a window of it shows, from --tail to --head: the part
+   out to the vendor, then, as the window slides on, the line pulled through
+   the circle and in to the middle. An empty window shows nothing, not even
+   its round caps. */
+.sh-tie path {
+  fill: none;
+  stroke: var(--dk-soft);
+  stroke-linecap: round;
+  stroke-dasharray: calc(var(--head, 0) - var(--tail, 0)) 2;
+  stroke-dashoffset: calc(-1 * var(--tail, 0));
+  stroke-opacity: min(1, calc((var(--head, 0) - var(--tail, 0)) * 1000));
+}
+
+/* The faint copy a heavy line leaves where it ran out to its vendor: dashed
+   and at half the weight, so it reads as where the line ran, not as a line
+   still there. */
+.sh-ghost path {
+  fill: none;
+  stroke: var(--dk-soft);
+  stroke-linecap: butt;
+  stroke-linejoin: round;
+  stroke-dasharray: 8 7;
+  opacity: 0.32;
+}
+
+/* A vendor: a small slate square. */
+.sh-vendor {
+  fill: var(--dk-soft);
+}
+
+/* A dollar sign sliding along a line: the catalog's slate sign (slide 11),
+   on a band of the ground so it reads over the heavy line under it. */
+.sh-money path {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.sh-money .sh-money__ground {
+  stroke: var(--dk-night);
+  stroke-width: 9;
+}
+
+.sh-money .sh-money__sign {
+  stroke: var(--dk-soft);
+  stroke-width: 3;
+}
+
+/* The shared middle: an indigo ring at the idle tint, grown from its centre
+   (--s) with its edge kept at 3 px, that draws on (--d). */
+.sh-centre {
+  fill: color-mix(in srgb, var(--dk-catalog) calc(var(--dk-tint-idle) * 100%), var(--dk-night));
+  fill-opacity: var(--d, 1);
+  stroke: var(--dk-catalog);
+  stroke-width: calc(3px / var(--s, 1));
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - var(--d, 1));
+  stroke-opacity: min(1, calc(var(--d, 1) * 100));
+}
+
+/* A label set along a line: a box turned to the line's angle, its words in its middle. */
+.sh-along {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(var(--turn, 0deg));
+  transform-origin: 50% 50%;
+}
+
+.sh-along__words {
+  display: block;
+  text-align: center;
+  font-family: var(--dk-face);
+  font-size: var(--dk-label);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.sh-along__words > span {
+  display: block;
+}

@@ -1,0 +1,305 @@
+/* The catalog world's own marks, in stage pixels and under the kit's rules
+   (kit.css): paper, soft and rule; the catalog's colour on what is the
+   catalog and the process's on what the process does; the pass tint only on
+   a ticked check; and coral only through the kit's HumanMark and its words
+   class. Every state arrives as a custom property a move sets (--d, --k,
+   --pass), so a cut and a build end alike. */
+
+/* Slide 1's credit line, set back. */
+.catalog-soft {
+  color: var(--dk-soft);
+}
+
+/* Slide 7's card on the desk: a paper outline, title bars in paper, lines of writing in rule, and the privacy box the sender ticked, with a plain paper tick (not a check that passed). */
+.catalog-sheet,
+.catalog-sheet__bar,
+.catalog-sheet__line,
+.catalog-sheet__tick {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.catalog-sheet {
+  stroke: var(--dk-paper);
+  stroke-width: 2.5;
+}
+
+.catalog-sheet__bar {
+  stroke: var(--dk-paper);
+}
+
+.catalog-sheet__line {
+  stroke: var(--dk-rule);
+  stroke-width: 6;
+}
+
+.catalog-sheet__tick {
+  stroke: var(--dk-paper);
+  stroke-width: 3;
+}
+
+/* The desk the reviewer sits at: a heavier rule. */
+.catalog-desk {
+  stroke: var(--dk-soft);
+  stroke-width: 3;
+}
+
+/* A checklist row that passed: its square takes the pass tint and a night tick. */
+.catalog-check__tint {
+  fill: var(--dk-pass);
+  opacity: var(--pass, 0);
+}
+
+.catalog-check__tick {
+  fill: none;
+  stroke: var(--dk-night);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: var(--pass, 0);
+}
+
+/* Slide 2's tag beside the catalog's page: paper words on night, standing on the catalog's rule. */
+.dk-block.catalog-tag {
+  padding: 4px 12px;
+  border-bottom: 3px solid var(--dk-catalog);
+  border-radius: 6px 6px 0 0;
+  background: var(--dk-night);
+  font-size: var(--dk-label);
+  font-weight: 500;
+  line-height: 32px;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.dk-block.catalog-tag > span {
+  display: block;
+}
+
+/* Slide 5's Approval box: outlined in navy, heavier than the other wells, so the person's mark over it is the only orange on the row. */
+.dk-well--human[data-build="row.human"] {
+  stroke: var(--dk-paper);
+}
+
+/* Draft and Checks, where scripts do the work: the fill a card leaves there is the process's tint, not the quiet paper one. */
+.dk-well__done[data-build="row.s2.done"],
+.dk-well__done[data-build="row.s3.done"] {
+  background: var(--dk-process);
+  opacity: var(--dk-tint-idle);
+}
+
+/* Slide 5's status page under the row: a paper outline, rings in rule on a rule line, each step's dot in paper as the card reaches it, and the lit line between two steps in paper. */
+.catalog-status {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 2.5;
+}
+
+.catalog-status__ring {
+  fill: var(--dk-night);
+  /* The ground inside a ring comes in with the page's drawing, so an undrawn ring paints nothing over what lies under it. */
+  fill-opacity: var(--d, 0);
+  stroke: var(--dk-rule);
+  stroke-width: 2.5;
+}
+
+.catalog-status__step {
+  fill: var(--dk-paper);
+  /* fill-opacity, not opacity: leaving the slide hides each dot with autoAlpha, which writes an inline opacity that would override this. */
+  fill-opacity: var(--k, 0);
+}
+
+.catalog-status__link {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+/* A working session: an outline in the process's colour, at full strength, that fills from the left with the process's quiet tint as the work is done, so its name reads inside it. */
+.catalog-session {
+  fill: none;
+  stroke: var(--dk-process);
+  stroke-width: 2.5;
+}
+
+.catalog-session__fill {
+  fill: var(--dk-process);
+  fill-opacity: var(--dk-tint-idle);
+  transform: scaleX(var(--k, 0));
+  transform-origin: 0 50%;
+  transform-box: fill-box;
+}
+
+/* Slide 9's third session: the catalog's own header on its page, its branding, in the catalog's colour, its tint coming in as it draws. */
+.catalog-brand {
+  fill: var(--dk-catalog);
+  fill-opacity: calc(var(--d, 0) * var(--dk-tint-active));
+  stroke: var(--dk-catalog);
+  stroke-width: 2.5;
+}
+
+/* Slide 9's feedback from the coalition: its word in a box with the catalog's edge, on night. */
+.dk-block.catalog-feedback {
+  border: 2.5px solid var(--dk-catalog);
+  border-radius: 12px;
+  background: var(--dk-night);
+}
+
+/* Slide 9's end of the row: "Live", the catalog on the site, set apart from the feedback by the catalog's heavier edge and its quiet tint. */
+.dk-block.catalog-live {
+  border: 4px solid var(--dk-catalog);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--dk-catalog) calc(var(--dk-tint-idle) * 100%), var(--dk-night));
+  font-weight: 600;
+}
+
+/* Slide 10's pieces of the wireframe, built: each place drawn again in the process's colour, its quiet tint coming in as it draws. */
+.catalog-built__part {
+  fill: var(--dk-process);
+  fill-opacity: calc(var(--d, 0) * var(--dk-tint-idle));
+  stroke: var(--dk-process);
+  stroke-width: 2.5;
+}
+
+/* Slides 11 and 11a, all in grey: outlines in soft, lines of writing and days in rule. */
+.catalog-grey,
+.catalog-grey__line,
+.catalog-grey__day {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.catalog-grey {
+  stroke: var(--dk-soft);
+  stroke-width: 2.5;
+}
+
+.catalog-grey--binding {
+  fill: var(--dk-raised);
+  fill-opacity: var(--d, 0);
+}
+
+.catalog-grey__line {
+  stroke: var(--dk-rule);
+  stroke-width: 6;
+}
+
+.catalog-grey__day {
+  stroke: var(--dk-rule);
+  stroke-width: 2;
+}
+
+/* A calendar page over the face: night, so it hides the one under it, and it turns up over the binding as --t goes to 1. */
+.catalog-page {
+  transform: scaleY(calc(1 - var(--t, 0)));
+  transform-origin: 50% 0;
+  transform-box: fill-box;
+}
+
+.catalog-page__sheet {
+  fill: var(--dk-night);
+  stroke: var(--dk-soft);
+  stroke-width: 2.5;
+}
+
+.catalog-page__strip {
+  fill: var(--dk-soft);
+}
+
+/* A page's month, at the top of its page, in soft. */
+.catalog-page__month {
+  fill: var(--dk-soft);
+  font-family: var(--dk-face);
+  font-size: var(--dk-label);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.catalog-dollar {
+  fill: none;
+  stroke: var(--dk-soft);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+/* A quote, and the change request: paper words in a soft outline, on night. */
+.dk-block.catalog-quote {
+  border: 2.5px solid var(--dk-soft);
+  border-radius: 8px;
+  background: var(--dk-night);
+  font-size: var(--dk-label);
+  white-space: nowrap;
+}
+
+/* Slide 11a's AI badge: a quote's outline, rounded into a pill, its word in bold. */
+.dk-block.catalog-badge {
+  border-radius: 999px;
+  font-size: var(--dk-text);
+  font-weight: 700;
+}
+
+/* The "No" the stamp leaves, in soft, tilted on the card. */
+.catalog-no rect {
+  fill: none;
+  stroke: var(--dk-soft);
+  stroke-width: 4;
+}
+
+.catalog-no text {
+  fill: var(--dk-soft);
+  font-size: 44px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* The stamp: a grey block on a handle, which swings as --s goes from 1 to 0. */
+.catalog-stamp {
+  transform: rotate(calc(var(--s, 0) * -24deg));
+  transform-box: view-box;
+}
+
+.catalog-stamp rect {
+  fill: var(--dk-raised);
+  stroke: var(--dk-soft);
+  stroke-width: 2.5;
+}
+
+/* The chat bubble inside the app, and its two lines of message. */
+.catalog-bubble,
+.catalog-bubble__line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.catalog-bubble {
+  stroke: var(--dk-paper);
+  stroke-width: 2.5;
+}
+
+.catalog-bubble__line {
+  stroke: var(--dk-rule);
+  stroke-width: 6;
+}
+
+/* The prohibition sign over the chatbot picture: a heavy ring and slash in the words' navy, so it reads as a firm no over the app's light rule. */
+.catalog-nope {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 10;
+  stroke-linecap: round;
+}
+
+/* "Yours": a paper ring round the app. */
+.catalog-yours {
+  fill: none;
+  stroke: var(--dk-paper);
+  stroke-width: 3;
+}
+
+/* The approvals on the history line are the human mark at half size: its ring is set twice as heavy, so it draws at the mark's own weight. */
+.catalog-history .dk-human__ring {
+  stroke-width: 7;
+}
