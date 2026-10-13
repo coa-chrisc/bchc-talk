@@ -8,13 +8,13 @@
  * module.
  */
 import type { WorldEntry } from "@/components/deck/engine";
-import { DUR, EASE, RISE, chain, draw, hide, retitle, rise, show, to, wipe, type Counts } from "@/components/deck/kit";
+import { DUR, EASE, chain, draw, hide, retitle, rise, show, to, wipe, type Counts } from "@/components/deck/kit";
 import { copyFor, picturesOf, picture, story, worldTitle } from "../steps";
 import { OWN, TITLES } from "./layout";
 import { OURS, PAGES, YOURS } from "./layout-binders";
 import { CONTENTS, FLAPS, LINK, PACK, TOOLS } from "./layout-pack";
 import { CARDS, CATALOG, SLOT, STACK, WAITING } from "./layout-source";
-import { HELPER, HELPER_TURN, PLANNED, SEATS, TABLE } from "./layout-workshop";
+import { BOOKLET_DROP, CHAT, SEATS, TABLE } from "./layout-workshop";
 import { Scene } from "./scene";
 import { spreadsSteps } from "./steps-spreads";
 import { releasingSteps } from "./world-sauce";
@@ -207,18 +207,18 @@ const design = picture("design-yours", {
   },
 });
 
-/* 33. Help getting set up: a workshop table from above, a person and a laptop at each seat; the Austin team's helper goes round, and a small tool takes shape on each screen as they reach it. */
+/* 33. Setup guides: the table from above, a person and a laptop at each seat; a guide booklet lands beside each laptop, a small tool takes shape on each screen in turn as its agent fills, and a chat window opens in the corner with a short line typing in it. */
 
-/** The helper's trip: to each seat in turn, round the table's right end between the top and the foot. */
-const TOUR = [
-  ...SEATS.slice(0, 3).map((seat, i) => ({ point: seat.helper, above: true, seat, hop: i === 0 ? 0.6 : 0.45 })),
-  { point: HELPER_TURN, above: true, seat: undefined, hop: 0.4 },
-  ...SEATS.slice(3).map((seat, i) => ({ point: seat.helper, above: false, seat, hop: i === 0 ? 0.4 : 0.45 })),
-];
-/** Seconds the helper stays at a seat while its tool takes shape. */
-export const DWELL = 0.35;
-/** When the helper reaches each stop on the tour, from the tour's start. */
-export const ARRIVALS = TOUR.reduce<number[]>((times, stop, i) => [...times, (i ? times[i - 1] + (TOUR[i - 1].seat ? DWELL : 0) : 0) + stop.hop], []);
+/** Seconds between one booklet landing and the next. */
+export const GUIDE_APART = 0.15;
+/** Seconds between one screen's tool taking shape and the next, round the table. */
+export const TOOL_APART = 0.4;
+/** The chat's two runs of typing: when each starts from the window's first line and how long it takes, in steps like keys being struck. */
+export const TYPING = [
+  { at: 0.8, duration: 0.9 },
+  { at: 1.8, duration: 0.6 },
+] as const;
+const KEYS = "steps(9)";
 const workshops = picture("workshops", {
   play: {
     moves: chain(
@@ -244,33 +244,33 @@ const workshops = picture("workshops", {
           with: true,
           hold: 0.3,
         },
-        { moves: story("workshops", 0), with: true, hold: 0.6 },
         {
-          // The Austin team's helper comes up at the table's left end, named over their head. Both travel by --x and --y (Part).
-          moves: [
-            to(HELPER.key, { autoAlpha: 1, "--y": 0 }, { autoAlpha: 0, "--x": 0, "--y": RISE }, { duration: 0.6, ease: EASE.out, at: 0 }),
-            to(HELPER.nameKey, { autoAlpha: 1, "--y": 0 }, { autoAlpha: 0, "--x": 0, "--y": RISE }, { duration: 0.6, ease: EASE.out, at: 0.1 }),
-          ],
+          // One after another, a guide booklet drops onto the table beside each laptop, its name on its cover. Each travels by --y (Part).
+          moves: SEATS.map((seat, i) => to(seat.guideKey, { "--d": 1, "--y": 0 }, { "--d": 0, "--y": BOOKLET_DROP }, { duration: 0.6, ease: EASE.out, at: i * GUIDE_APART })),
+          hold: 0.2,
+        },
+        { moves: story("workshops", 0), with: true, hold: 0.3 },
+        {
+          // Round the table, each screen's tool takes shape and the agent beside it fills its ring.
+          moves: SEATS.flatMap((seat, i) => [
+            ...drawn(seat.toolKey, { duration: 0.6, at: i * TOOL_APART }),
+            ...to(seat.agentKey, { "--k": 1 }, { "--k": 0 }, { duration: 0.5, ease: EASE.draw, at: i * TOOL_APART }),
+          ]),
           hold: 0.3,
         },
         {
-          // They go round; at each seat its tool takes shape on the screen and the agent beside it fills its ring.
-          moves: TOUR.flatMap((stop, i) => {
-            const arrive = ARRIVALS[i];
-            const place = HELPER.at(stop.point, stop.above);
-            return [
-              ...to(HELPER.key, place.helper, undefined, { duration: stop.hop, ease: EASE.draw, at: arrive - stop.hop }),
-              ...to(HELPER.nameKey, place.name, undefined, { duration: stop.hop, ease: EASE.draw, at: arrive - stop.hop }),
-              ...(stop.seat
-                ? [...drawn(stop.seat.toolKey, { duration: 0.6, at: arrive }), ...to(stop.seat.agentKey, { "--k": 1 }, { "--k": 0 }, { duration: 0.5, ease: EASE.draw, at: arrive })]
-                : []),
-            ];
-          }),
-          hold: 0.2,
+          // The chat window draws in the corner with Austin's name in its bar; its bubble comes up, and the line types into it in two runs.
+          moves: [
+            draw(CHAT.key, { duration: 0.7, at: 0 }),
+            show(CHAT.bubbleKey, { duration: 0.2, at: 0.6 }),
+            ...CHAT.lines.flatMap((line, n) => [
+              ...show(line.key, { duration: 0.01, ease: "none", at: TYPING[n].at }),
+              ...to(line.key, { "--k": 1 }, { "--k": 0 }, { duration: TYPING[n].duration, ease: KEYS, at: TYPING[n].at }),
+            ]),
+          ],
+          hold: 0.3,
         },
-        { moves: story("workshops", 1), with: true, hold: 1.2 },
-        // It's planned, not running yet.
-        { moves: show(PLANNED.key), hold: 0.3 },
+        { moves: story("workshops", 1), with: true, hold: 0.3 },
       ],
       { counts },
     ),

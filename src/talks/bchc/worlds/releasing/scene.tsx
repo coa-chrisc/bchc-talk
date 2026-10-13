@@ -6,8 +6,8 @@
  * scene-workshop.tsx (33) and scene-spreads.tsx (33a). Static markup: the
  * steps (world.ts, world-sauce.ts, steps-spreads.ts) do all the moving.
  * Colour comes by role (`data-hue`): the agent pack the process's green, the
- * source code the catalog's indigo, the design system and skills pink, help
- * getting set up sky, and the sauce gold. Agents are the process's green.
+ * source code the catalog's indigo, the design system and skills pink, the
+ * setup guides sky, and the sauce gold. Agents are the process's green.
  */
 "use client";
 
@@ -18,7 +18,7 @@ import { PackMarks } from "./scene-pack";
 import { SauceMarks, SauceWords } from "./scene-sauce";
 import { SourceMarks, SourceWords } from "./scene-source";
 import { SpreadsMarks } from "./scene-spreads";
-import { WorkshopMarks, WorkshopWords } from "./scene-workshop";
+import { WorkshopMarks } from "./scene-workshop";
 import "./releasing.css";
 
 function Marks() {
@@ -46,7 +46,6 @@ export function Scene() {
       <SauceWords />
       <SourceWords />
       <BinderWords />
-      <WorkshopWords />
     </Plane>
   );
 }

@@ -291,19 +291,6 @@
   font-weight: 600;
 }
 
-/* Slide 33. The "Planned" tag pinned across the table's corner: a white ground, so the table's edge does not run through its word. The outline's svg is positioned, so the tag holds its own stack and the svg sits under the word. */
-.rel-planned .dk-tag {
-  z-index: 0;
-}
-
-.rel-planned .dk-tag svg {
-  z-index: -1;
-}
-
-.rel-planned .dk-tag rect {
-  fill: var(--dk-night);
-}
-
 /* Slide 33. The table from above, its tint coming up as its edge draws (--d); a laptop's white screen; the tool on it taking shape (--d lines, --k fills). */
 .rel-table {
   fill: var(--hue);
@@ -348,9 +335,39 @@
   transform-origin: 50% 100%;
 }
 
-/* The Austin team's helper: a figure in help's sky. */
-.rel-helper {
-  stroke-width: 3;
+/* A guide booklet: a white cover on the table's light tint, with its spine in help's sky, coming up as its edge draws (--d). */
+.rel-guide {
+  fill: var(--dk-night);
+  opacity: min(1, calc(var(--d, 0) * 3));
+}
+
+/* The writing on a booklet's cover where the first one has its name: it comes up as the booklet draws, as the name does. */
+.rel-guide__writing {
+  opacity: var(--d, 0);
+}
+
+.rel-guide--spine {
+  fill: var(--hue);
+  fill-opacity: var(--dk-tint-active);
+}
+
+/* The chat window's bar, tinted in help's sky, coming up with its frame (--d); its bubble, tinted the same, there whole with its part. */
+.rel-chat-bar {
+  fill: var(--hue);
+  fill-opacity: var(--dk-tint-idle);
+  opacity: min(1, calc(var(--d, 0) * 3));
+}
+
+.rel-chat-bubble {
+  fill: var(--hue);
+  fill-opacity: var(--dk-tint-active);
+}
+
+/* A run of the chat's line, typing out left to right as --k steps up. */
+.rel-chat-typing {
+  transform: scaleX(var(--k, 0));
+  transform-box: fill-box;
+  transform-origin: 0 50%;
 }
 
 /* Slide 33a. A small table there whole, where slide 33's table lands as it shrinks. */

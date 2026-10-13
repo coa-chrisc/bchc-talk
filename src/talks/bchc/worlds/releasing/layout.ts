@@ -24,7 +24,7 @@ export const TITLES = {
   releasing: { key: "rel.title.releasing", ...TITLE, lines: [pictureOf("releasing").show] },
   skills: { key: "rel.title.skills", ...TITLE, lines: breakAfter(pictureOf("skills").show, "tool.") },
   source: { key: "rel.title.source", ...TITLE, lines: breakAfter(pictureOf("source").show, "post") },
-  "design-yours": { key: "rel.title.design-yours", ...TITLE, lines: breakAfter(pictureOf("design-yours").show, "your own") },
+  "design-yours": { key: "rel.title.design-yours", ...TITLE, lines: breakAfter(pictureOf("design-yours").show, "skills,") },
   workshops: { key: "rel.title.workshops", ...TITLE, lines: [pictureOf("workshops").show] },
   spreads: { key: "rel.title.spreads", ...TITLE, lines: [pictureOf("spreads").show] },
 } as const;

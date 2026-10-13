@@ -1,5 +1,5 @@
 /**
- * Part 6's step labels (slides 35 to 39): each title says the thing itself,
+ * Part 6's step labels (slides 35 to 39, 38s among them): each title says the thing itself,
  * and which of the three steps a slide belongs to is a small label over the
  * title, at its left edge. The label comes up with the title and goes with
  * it, and a run of slides on the same step keeps one label, still, while
@@ -10,13 +10,14 @@ import { pictureOf } from "../../script/find";
 import { endState, hiddenAt, markup, movesOf, nodeOf, only, pictures, text } from "./harness";
 import { KICKER, KICKERS, TITLE, TITLES, TITLE_LINES, bandOf, kickerOf, titleKey } from "./layout";
 
-/** The titles the owner approved for 35 to 39, and the label over each. */
+/** The titles the owner approved for 35 to 39, 38s among them, and the label over each. */
 const STEPS: Record<string, { label: string; title: string }> = {
   "step-one": { label: "Step one", title: "Post a project in the catalog." },
   training: { label: "Step two", title: "Send your people to training." },
   github: { label: "Step two", title: "Set up GitHub." },
   tools: { label: "Step two", title: "Request access to AI coding tools." },
   approver: { label: "Step two", title: "Decide who is responsible for approving changes." },
+  safe: { label: "Step two", title: "Rolling out AI safely means controlling the data and keeping a person in charge." },
   "low-risk": { label: "Step three", title: "Start with low-risk projects that use public data and help residents right away." },
 };
 
@@ -46,6 +47,7 @@ describe("Part 6's step labels", () => {
       github: "Step two",
       tools: "Step two",
       approver: "Step two",
+      safe: "Step two",
       questions: null,
       fde: null,
       "low-risk": "Step three",
@@ -65,11 +67,11 @@ describe("Part 6's step labels", () => {
     for (const picture of pictures.filter((entry) => !STEPS[entry.id])) expect(picture.see.join(" "), picture.id).not.toMatch(/sits above the title/);
   });
 
-  it("share one label across the four step-two slides, which stays still while they hand the title on", () => {
+  it("share one label across the five step-two slides, 36 to 38s, which stays still while they hand the title on", () => {
     const two = kickerOf("training")!;
-    expect(["github", "tools", "approver"].map((id) => kickerOf(id)!.key)).toEqual([two.key, two.key, two.key]);
+    expect(["github", "tools", "approver", "safe"].map((id) => kickerOf(id)!.key)).toEqual([two.key, two.key, two.key, two.key]);
     expect(KICKERS.map((kicker) => kicker.key)).toEqual(["kicker.step-one", "kicker.training", "kicker.low-risk"]);
-    for (const id of ["github", "tools", "approver"]) {
+    for (const id of ["github", "tools", "approver", "safe"]) {
       expect(movesOf(play(id), two.key), id).toEqual([]);
       expect(hiddenAt(endState(play(id)), nodeOf(two.key)), id).toBe(false);
     }

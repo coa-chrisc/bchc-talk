@@ -103,6 +103,7 @@ const PLAN: [string, string[]][] = [
   ["github", ["play"]],
   ["tools", ["play"]],
   ["approver", ["play"]],
+  ["safe", ["play"]],
   ["questions", ["play"]],
   ["fde", ["play"]],
   ["low-risk", ["play"]],
@@ -158,7 +159,7 @@ const LONE_DIGIT = /(?<![\d,.])[2-9](?![\d,.])/;
 
 describe("the talk's script", () => {
   it("is the approved script, word for word: every picture's heading, On screen, story lines, You say and They see", () => {
-    expect(SOURCE.pictures).toHaveLength(49);
+    expect(SOURCE.pictures).toHaveLength(50);
     expect(SCRIPT.map(({ part, number, name, show, story, say, see }) => ({ part, number, name, show, story, say, see }))).toEqual(
       SOURCE.pictures.map(({ part, number, name, show, story, say, see }) => ({ part, number, name, show, story, say, see })),
     );
@@ -207,9 +208,9 @@ describe("the talk's script", () => {
     for (const picture of SCRIPT) expect(picture.world, picture.id).toBe(WORLD_OF_PART[picture.part - 1]);
   });
 
-  it("gives every picture one click, and slides 19 and 27 two: 51 in all", () => {
+  it("gives every picture one click, and slides 19 and 27 two: 52 in all", () => {
     for (const picture of SCRIPT) expect(picture.steps.length, picture.id).toBe(["19", "27"].includes(picture.number) ? 2 : 1);
-    expect(SCRIPT.flatMap((picture) => picture.steps)).toHaveLength(51);
+    expect(SCRIPT.flatMap((picture) => picture.steps)).toHaveLength(52);
   });
 
   it("leaves no string empty", () => {

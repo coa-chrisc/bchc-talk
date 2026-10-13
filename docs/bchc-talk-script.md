@@ -1,6 +1,6 @@
 # BCHC talk script, v3: Using AI in Public Health Practice
 
-Draft 8, 2026-10-11: slides 1 to 14 after the owner's review, and slides 15 to 44 after the round-3 audit (`bchc-audit-r3.md`) and the owner's answers to it. Draft 6 (2026-10-09) replaced draft 4 and is built from the owner's account in `bchc-talk-intent.md`, `bchc-two-things-we-share.md` and `bchc-catalog-origin-story.md`. This script is the single source for the build: on-screen words, animation and speaker lines. `bchc-onscreen-copy-v3.md` is superseded. Colour follows the roles in `bchc-colour-direction.md`, in the Austin Public Health palette from `bchc-brand.md`.
+Draft 9, 2026-10-13: Austin's promises softened after the owner's review. Austin shares and releases its design system, skills and setup guides, and is happy to chat, but no longer promises to teach, give or run workshops (slides 29, 32, 33 and 33a); slide 21 names the governance step; slide 38s, data security and governance, is new; slide 38a says "a person", not "a named person"; and slide 40's starter templates are planned for the release. Draft 8, 2026-10-11: slides 1 to 14 after the owner's review, and slides 15 to 44 after the round-3 audit (`bchc-audit-r3.md`) and the owner's answers to it. Draft 6 (2026-10-09) replaced draft 4 and is built from the owner's account in `bchc-talk-intent.md`, `bchc-two-things-we-share.md` and `bchc-catalog-origin-story.md`. This script is the single source for the build: on-screen words, animation and speaker lines. `bchc-onscreen-copy-v3.md` is superseded. Colour follows the roles in `bchc-colour-direction.md`, in the Austin Public Health palette from `bchc-brand.md`.
 
 **Slide numbers** are kept from draft 4 so builders can find each picture in the code. The order on this page is the order shown. Part 1 now runs 1 to 5, then 7 to 10: slide 6 is cut, folded into 5 (its checklist moves to 7). Part 2 now runs 11, 11a, 12, 13. Part 3 now runs 14, 18, 14a, 15, 16, 17, 19, 20, 21, 22, 22a, 22b. Part 4 now runs 23, 24, 25, 26, 27: slide 28 is cut, and 27 closes Part 4. Part 5 now runs 29, 30, 31, 32, 33, 33a. Part 7 is slide 44 alone: slide 43 is cut, folded into 44.
 
@@ -231,7 +231,7 @@ The process and the catalog are two separate things. The process built the catal
 ### 21. Two reviewers, then a person
 **On screen:** Agents review each other's work.
 - Two AI reviewers check every change, and neither one wrote it.
-- After both reviewers pass it, a person approves the change.
+- After both reviewers pass it, a person approves the change. That is the governance step.
 
 **They see:** The view moves in from the board to one finished piece of work and stays there, with the board small beside it. Three large marks land under it one at a time, each with its label: "First reviewer: is it complete?", then "Second reviewer: is it safe and bug-free?", then "A person approves" with the "a person approves" mark. Both reviewer marks carry the reviewer's diamond from slide 19, and the builder who did the work stands to one side, labelled "Builder". The slide ends on the piece of work and its three labelled marks.
 
@@ -324,12 +324,12 @@ The point of this part is to get people excited about sharing. Every tool a depa
 ## Part 5. What we're sharing (about 7 minutes)
 
 ### 29. Austin's magic sauce
-**On screen:** We're giving you Austin's magic sauce.
+**On screen:** We're sharing Austin's magic sauce.
 - It comes in four parts, and each one helps your department build the way we do.
 
-**They see:** A hot sauce bottle drawn in line, labelled "Austin's magic sauce", sits in the middle of the screen. Its cap twists off and it tips, pouring four drops one at a time. Each drop lands with a small splash and opens into a panel: An agent pack for your AI coding tool. Our source code, in the catalog. How to build your own design system and skills. Help getting set up. The bottle stands back up with a little wobble and settles to one side. The bottle is drawn in navy line, and the sauce inside is gold and drains as it pours. Each drop falls gold and opens into a panel in that part's own colour: the agent pack in the process's colour, the source code in the catalog's colour, design system and skills pink, help sky. The same four colours carry through the next four slides.
+**They see:** A hot sauce bottle drawn in line, labelled "Austin's magic sauce", sits in the middle of the screen. Its cap twists off and it tips, pouring four drops one at a time. Each drop lands with a small splash and opens into a panel: An agent pack for your AI coding tool. Our source code, in the catalog. Our design system and skills, with how-to guides. Setup guides to get started. The bottle stands back up with a little wobble and settles to one side. The bottle is drawn in navy line, and the sauce inside is gold and drains as it pours. Each drop falls gold and opens into a panel in that part's own colour: the agent pack in the process's colour, the source code in the catalog's colour, design system and skills pink, setup guides sky. The same four colours carry through the next four slides.
 
-**You say:** We're doing this for everybody. We want every department in the coalition to have what we have, so we're giving you Austin's magic sauce. It comes in four parts, and I'll take you through each one.
+**You say:** We're doing this for everybody. We want every department in the coalition to have what we have, so we're sharing Austin's magic sauce. It comes in four parts, and I'll take you through each one.
 
 ### 30. An agent pack, in December
 **On screen:** An agent pack for your AI coding tool. We're aiming for December 2026.
@@ -349,30 +349,30 @@ The point of this part is to get people excited about sharing. Every tool a depa
 
 **You say:** We're going through the City's process now.
 
-### 32. How to build your own design system and skills
-**On screen:** We'll teach you to build your own design system and skills, using our templates.
+### 32. Our design system and skills, with how-to guides
+**On screen:** We'll release our design system and skills, with how-to guides.
 - Your agents need a design system and written skills before they build anything for you.
-- Your team fills in each template with your own colors, buttons and rules.
+- Use ours as templates. Fill them in with your own colors, buttons and rules.
 
 **They see:** An open binder labelled "Our templates", in pink, lies on the left, with tabs reading brand, components, accessibility and skills. Its pages slide out one at a time and land as blank copies in a second binder on the right, labelled "Yours". Your team fills in each copy: your own colors on the brand page, your own buttons on the components page, your own rules on a skill page. The slide ends on the two binders side by side, with the same tabs and different colors.
 
-**You say:** This is the part that makes our agents work the way they do. We'll show you how we built our design system and our skills, and give you our templates to learn from. Without a design system, every tool looks a little different and needs its own accessibility fixes.
+**You say:** This is the part that makes our agents work the way they do. We'll release our design system and our skills with how-to guides, so your team can start from them. Without a design system, every tool looks a little different and needs its own accessibility fixes.
 
-### 33. Help getting set up
-**On screen:** We'll help the first departments get set up.
-- We can meet with your team, and we hope to run hands-on workshops.
-- Your people would sit at a keyboard and build a first small project with us.
+### 33. Setup guides
+**On screen:** Setup guides come with the release.
+- Your people follow the guides to build a first small project with your agents.
+- We're happy to chat with your team as you get started.
 
-**They see:** A workshop table seen from above, with people from your department in every seat and a laptop in front of each. A person labelled "Austin team" moves from seat to seat. On each screen a small tool takes shape as its person works with an AI agent: a form on one, a map on another, a chart on a third. A small tag pinned on the table's corner reads "Planned". The table is drawn in sky, the colour help has on slide 29.
+**They see:** A table seen from above, with people from your department in every seat and a laptop in front of each. A small guide booklet lands beside each laptop, one after another; the first is labelled "Setup guide". On each screen a small tool takes shape as its person works with an AI agent: a form on one, a map on another, a chart on a third. Over the table's far end, a small chat window labelled "Austin" opens, its tail pointing down to the table, and a short line types into it. The table and the booklets are sky, the colour the setup guides have on slide 29.
 
-**You say:** We'd run workshops through this group and other public health AI work groups. We'll share dates if we can make it happen.
+**You say:** The guides walk your technical people through setup, from accounts to a first project. We're happy to chat with your team as you get started.
 
 ### 33a. The help spreads (new)
-**On screen:** The departments we help first will teach the next.
-- We'll start with a few departments that are ready now.
+**On screen:** The departments that start first will teach the next.
+- A few departments that are ready can start now.
 - Then each one teaches the next, so all of this can grow as fast as agentic development moves.
 
-**They see:** The workshop table from slide 33 shrinks to a small table at the left, with a circle labelled "Austin" beside it. Three lines draw out from that table, and a circle joins at the end of each, labelled "Ready now". Then each of the three gets a small table of its own, and two or three new circles join each one on lines of their own, labelled "Next". As the new tables light up, Austin's lines to the first three thin and fade, so the help visibly moves outward. The slide ends on a tree three levels deep: Austin, the ready departments with their tables, and the next departments. The tables and the lines are sky, the colour help has on slide 29, and the circles are navy line like the departments on slide 27.
+**They see:** The table from slide 33 shrinks to a small table at the left, with a circle labelled "Austin" beside it. Three lines draw out from that table, and a circle joins at the end of each, labelled "Ready now". Then each of the three gets a small table of its own, and two or three new circles join each one on lines of their own, labelled "Next". As the new tables light up, Austin's lines to the first three thin and fade, so the help visibly moves outward. The slide ends on a tree three levels deep: Austin, the ready departments with their tables, and the next departments. The tables and the lines are sky, the colour the setup guides have on slide 29, and the circles are navy line like the departments on slide 27.
 
 **You say:** We're planting seeds. A few departments start now and teach the next, so all of this can grow and adapt as fast as agentic development moves.
 
@@ -433,13 +433,22 @@ The point of this part is to get people excited about sharing. Every tool a depa
 
 **You say:** They should know your department and the subject.
 
-### 38a. The questions your IT and security teams will ask
-**On screen:** Expect four questions from your IT and security teams.
-- Keep the work in accounts your city already uses, and you can undo any change.
+### 38s. Step two: data security and governance (new)
+**On screen:** Rolling out AI safely means controlling the data and keeping a person in charge.
+- Agents work inside the GitHub and AI tool accounts your city already approves, under its own rules.
+- Start with public data. A person approves every change, GitHub records it, and you can undo it.
+
+**They see:** A small label "Step two" sits above the title. A dashed outline labelled "Your department" stands inside a fence, labelled "Accounts your city approves". A data table labelled "Public data" passes through the gate in the fence into the department; a second table labelled "Personal or health data" stops outside it and stays there. Inside, three changes arrive one at a time; each stops at a person labelled "Approver", takes the "a person approves" mark, and lands on a record line labelled "GitHub record" with a time stamp. The last entry slides back off the line, labelled "Undone", and the line closes up.
+
+**You say:** Some of you are rightly cautious about AI, and this is how we keep it safe. Nothing runs outside accounts your city has approved. We start with data you already publish. Every change goes through tests, two AI reviewers and a person before it goes live, and the record on GitHub shows your auditors who changed what and when. If something is wrong, you roll it back.
+
+### 38a. Your IT and security teams will ask these four questions
+**On screen:** Your IT and security teams will ask these four questions.
+- Keep the work in accounts your city already approves, and you can undo any change.
 
 **They see:** Four questions appear one at a time, each with its short answer beside it:
 - Where does our data go? Start with public data.
-- Who is accountable? A named person approves every change.
+- Who is accountable? A person approves every change.
 - What if the AI gets it wrong? Tests, two AI reviewers and a person check every change.
 - Do we need developers? You need someone technical to help with setup.
 
@@ -464,13 +473,13 @@ The point of this part is to get people excited about sharing. Every tool a depa
 **You say:** Start where the data is already public. The agents do the building, and your approver signs off.
 
 ### 40. Two starter templates
-**On screen:** Two ideas we'll release as starter templates: a Service Catalog and a Voice-Assisted Service Helpline.
+**On screen:** Two ideas we plan to release as starter templates: a Service Catalog and a Voice-Assisted Service Helpline.
 - The Service Catalog matches residents to services. The helpline answers questions people ask out loud.
 - Each template gives your agents a starting point to build on with your own public data.
 
 **They see:** Two line drawings side by side, each with a tag reading "Starter template". In the first, labelled "Service Catalog", a resident answers a few questions and their matching services light up. In the second, labelled "Voice-Assisted Service Helpline", a spoken question turns into a short list of services. Both stay line drawings, with no screenshots.
 
-**You say:** These are ideas we've worked out in Austin, and both will ship as starter templates in our release. The helpline lets people ask out loud and get pointed to the right service. Projects like these are a good place to cut your teeth, and they pay off from the first day.
+**You say:** These are ideas we've worked out in Austin, and both are planned for our release. The helpline lets people ask out loud and get pointed to the right service. Projects like these are a good place to cut your teeth, and they pay off from the first day.
 
 ### 41. Then take on more
 **On screen:** Start small, then take on more.

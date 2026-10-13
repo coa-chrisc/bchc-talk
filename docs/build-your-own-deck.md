@@ -80,10 +80,10 @@ Mirror the document in `src/talks/<id>/script/`. Copy these files from `src/talk
 
 In the BCHC copy, these lists are specific to that talk. Replace them with your own:
 
-- the count in `toHaveLength(49)`;
+- the count in `toHaveLength(50)`;
 - `PLAN`, every picture id and its step ids in order;
 - `WORLD_OF_PART`, which world each part is drawn in;
-- the two-click slides (19 and 27) and the total of 51 clicks;
+- the two-click slides (19 and 27) and the total of 52 clicks;
 - `LONG_STORY`, the story lines allowed past 100 characters;
 - `GITHUB_TERMS_SAID` and the "pull request" or "fork" rule;
 - the six-steps test and the rule that only slide 44 has no story line;
@@ -226,7 +226,7 @@ npx -y -p playwright@1.63.0 node src/talks/bchc/worlds/close/capture-finale.mjs 
 ```
 
 - It needs `ffmpeg` and `cwebp` on your machine, and Node 22.18 or later (`finale-pictures.mjs` loads the script's `.ts` part files directly).
-- Always pass `--version`, and use a new one each time (the default in the script is `v6`; `finale.json` is on `v9`). A new name stops browsers showing old stills.
+- Always pass `--version`, and use a new one each time (the default in the script is `v6`; `finale.json` is on `v10`). A new name stops browsers showing old stills.
 - `--manifest` writes the list into `close/finale.json`, which the grid reads.
 - `--steps=3,9,14` captures only the step numbers you name.
 - Its header says to serve the site with `next start`. This site is a static export, so `next start` does not serve it: use `npm run dev` or serve `out/`.
