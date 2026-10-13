@@ -1,4 +1,4 @@
-/** Part 5's slides 30 to 33, one describe each: the agent pack, our source code, the design binders and the workshop. */
+/** Part 5's slides 30 to 33, one describe each: the agent pack, our source code, the design binders and the setup guides. */
 import { describe, expect, it, vi } from "vitest";
 import { CONTENT_TOP, STORY } from "@/components/deck/kit";
 import { shown } from "../../script/find";
@@ -7,12 +7,12 @@ import { shown } from "../../script/find";
 vi.mock("./releasing.css", () => ({}));
 
 const { RIGHT_EDGE, compiled, endOf, ends, hueOf, indexOf, markup, partPlays, propPlays, ruleOf, shownAt, startOf, stateAt, texts, visible } = await import("./test-support");
-const { ARRIVALS, DWELL, PAGE_APART, PAGE_TRIP, RISE_APART } = await import("./world");
+const { GUIDE_APART, PAGE_APART, PAGE_TRIP, RISE_APART, TOOL_APART, TYPING } = await import("./world");
 const { OWN, STORIES } = await import("./layout");
 const { CONTENTS, FLAPS, LINK, PACK, PACK_NAME, TOOLS, flapTip } = await import("./layout-pack");
 const { CARDS, CATALOG, SLOT, STACK, WAITING } = await import("./layout-source");
 const { ACROSS, OURS, PAGES, YOURS } = await import("./layout-binders");
-const { HELPER, HELPER_TURN, PLANNED, SEATS, TABLE } = await import("./layout-workshop");
+const { BOOKLET, BOOKLET_DROP, CHAT, SEATS, TABLE } = await import("./layout-workshop");
 
 describe("Part 5, slides 30 to 33", () => {
   describe("slide 30, the agent pack", () => {
@@ -293,97 +293,151 @@ describe("Part 5, slides 30 to 33", () => {
     });
   });
 
-  describe("slide 33, help getting set up", () => {
+  describe("slide 33, setup guides", () => {
     const step = "workshops.play";
-    /** The seats in the order the helper reaches them: along the top, round the end, back along the foot. */
-    const stops = [...SEATS.slice(0, 3).map((seat) => seat.helper), HELPER_TURN, ...SEATS.slice(3).map((seat) => seat.helper)];
+    /** The gap between two areas: negative where they overlap. */
+    const apart = (a: { x: number; y: number; w: number; h: number }, b: { x: number; y: number; w: number; h: number }) =>
+      Math.max(b.x - (a.x + a.w), a.x - (b.x + b.w), b.y - (a.y + a.h), a.y - (b.y + b.h));
+    const agentBox = (seat: (typeof SEATS)[number]) => ({ x: seat.agent.at.x - seat.agent.r, y: seat.agent.at.y - seat.agent.r, w: 2 * seat.agent.r, h: 2 * seat.agent.r });
+    /** A label's width in the label type (26 px), at 0.55 em a letter: wider than Geist sets these words. */
+    const labelWidth = (text: string) => text.length * 26 * 0.55;
 
-    it("labels the helper \"Austin team\" and the tag \"Planned\", from the script", () => {
-      expect([HELPER.text, PLANNED.text]).toEqual(shown("workshops", "play"));
-      expect(HELPER.text).toBe("Austin team");
-      expect(texts).toContain("Austin team");
-      expect(texts).toContain("Planned");
-    });
-
-    it("sends the helper to each seat in turn, and has each seat's tool take shape, and its agent fill, as they arrive", () => {
-      const hops = propPlays(step, HELPER.key, "--x");
-      expect(hops.map((play) => [play.on["--x"], play.on["--y"]])).toEqual(stops.map((p) => [p.x - HELPER.start.x, p.y - HELPER.start.y]));
-      const tourStart = hops[0].at;
-      expect(tourStart).toBeGreaterThanOrEqual(endOf(step, TABLE.key));
-      for (const [n, seat] of SEATS.entries()) {
-        const stop = n < 3 ? n : n + 1;
-        const arrive = ends(hops[stop]);
-        expect(arrive).toBeCloseTo(tourStart + ARRIVALS[stop], 9);
-        expect(startOf(step, seat.toolKey), seat.toolKey).toBeCloseTo(arrive, 9);
-        expect(propPlays(step, seat.agentKey, "--k")[0].at, seat.agentKey).toBeCloseTo(arrive, 9);
-        // They stay while it takes shape, then go on.
-        if (stop + 1 < hops.length) expect(hops[stop + 1].at - arrive).toBeCloseTo(DWELL, 9);
+    it("names the first booklet \"Setup guide\" on its cover, gives the other five covers writing, and names the chat window \"Austin\" in its bar, from the script, and keeps the workshop's helper and tag off the stage", () => {
+      expect(shown("workshops", "play")).toEqual(["Setup guide", "Austin"]);
+      expect(SEATS[0].guide.lines.join(" ")).toBe(shown("workshops", "play")[0]);
+      expect(CHAT.name.text).toBe(shown("workshops", "play")[1]);
+      // Only the first cover, the first to land and the first read, carries the name, on two lines; the rest are the same booklet, with lines of writing on the cover.
+      for (const line of SEATS[0].guide.lines) expect(texts.filter((text) => text === line), line).toHaveLength(1);
+      for (const seat of SEATS.slice(1)) {
+        expect(seat.guide.lines, seat.guideKey).toEqual([]);
+        expect(markup, seat.guideKey).toMatch(new RegExp(`data-build="${seat.guideKey.replace(/\./g, "\\.")}"[^>]*>(?:(?!data-build=)[\\s\\S])*rel-guide__writing`));
       }
-      // The person, laptop and agent at each seat are drawn before the helper sets off.
-      for (const seat of SEATS) for (const key of [seat.key, seat.laptopKey]) expect(endOf(step, key), key).toBeLessThanOrEqual(tourStart);
-      // Line B, about building a first project, comes during the tour; "Planned" after it.
-      expect(startOf(step, STORIES.workshops.keys[1])).toBeGreaterThan(tourStart);
-      expect(startOf(step, STORIES.workshops.keys[1])).toBeLessThan(ends(hops.at(-1)!));
-      expect(startOf(step, PLANNED.key)).toBeGreaterThanOrEqual(Math.max(...SEATS.map((seat) => endOf(step, seat.toolKey))));
+      // Austin is named in the chat's bar here, and on its circle in slide 33a.
+      expect(texts.filter((text) => text === "Austin")).toHaveLength(2);
+      for (const gone of ["Austin team", "Planned"]) expect(texts).not.toContain(gone);
     });
 
-    it("ends with a tool on every screen, every agent filled, the helper at the last seat with their name, and the Planned tag", () => {
+    it("draws the table and the seats, lands the booklets one after another with line A, has each screen's tool take shape round the table as its agent fills, then opens the chat window with line B and types its line in two runs", () => {
+      const seated = Math.max(...SEATS.flatMap((seat) => [endOf(step, seat.key), endOf(step, seat.laptopKey)]));
+      const drops = SEATS.map((seat) => propPlays(step, seat.guideKey, "--y")[0]);
+      for (const [i, drop] of drops.entries()) {
+        expect(drop.at, SEATS[i].guideKey).toBeGreaterThanOrEqual(seated - 1e-9);
+        expect(stateAt("design-yours.play")[SEATS[i].guideKey]).toMatchObject({ "--y": BOOKLET_DROP, "--d": 0 });
+        expect(drop.on).toMatchObject({ "--y": 0, "--d": 1 });
+        if (i > 0) expect(drop.at - drops[i - 1].at).toBeCloseTo(GUIDE_APART, 9);
+      }
+      // Line A, about following the guides, comes as they land.
+      const lineA = startOf(step, STORIES.workshops.keys[0]);
+      expect(lineA).toBeGreaterThan(drops[0].at);
+      expect(lineA).toBeLessThan(ends(drops.at(-1)!));
+      // Round the table, a tool takes shape on each screen once every booklet has landed, its agent filling as it does.
+      const landed = Math.max(...drops.map(ends));
+      const tools = SEATS.map((seat) => startOf(step, seat.toolKey));
+      for (const [i, seat] of SEATS.entries()) {
+        expect(tools[i], seat.toolKey).toBeGreaterThanOrEqual(landed - 1e-9);
+        expect(propPlays(step, seat.agentKey, "--k")[0].at, seat.agentKey).toBeCloseTo(tools[i], 9);
+        if (i > 0) expect(tools[i] - tools[i - 1]).toBeCloseTo(TOOL_APART, 9);
+      }
+      // The chat window opens once every tool has taken shape; its bubble comes up, and its line types out in two runs, one after the other, key by key.
+      const opens = startOf(step, CHAT.key);
+      expect(opens).toBeGreaterThanOrEqual(Math.max(...SEATS.map((seat) => endOf(step, seat.toolKey))) - 1e-9);
+      expect(startOf(step, CHAT.bubbleKey)).toBeGreaterThan(opens);
+      const runs = CHAT.lines.map((line) => propPlays(step, line.key, "--k")[0]);
+      for (const [n, run] of runs.entries()) {
+        expect(run.at, CHAT.lines[n].key).toBeCloseTo(opens + TYPING[n].at, 9);
+        expect(run.ease).toMatch(/^steps\(\d+\)$/);
+        expect(propPlays(step, CHAT.lines[n].key, "autoAlpha")[0].at).toBeLessThanOrEqual(run.at);
+      }
+      expect(runs[1].at).toBeGreaterThanOrEqual(ends(runs[0]));
+      expect(runs[0].at).toBeGreaterThanOrEqual(endOf(step, CHAT.bubbleKey) - 1e-9);
+      // Line B, about chatting with your team, comes with the window, before the line has typed out.
+      const lineB = startOf(step, STORIES.workshops.keys[1]);
+      expect(lineB).toBeGreaterThan(opens);
+      expect(lineB).toBeLessThan(ends(runs[0]));
+    });
+
+    it("ends with a booklet beside every laptop, a tool on every screen, every agent filled, and the chat window open with its line typed", () => {
       const end = stateAt(step);
       expect(shownAt(step).sort()).toEqual([...OWN.workshops].sort());
       for (const seat of SEATS) {
+        expect(end[seat.guideKey]).toMatchObject({ "--d": 1, "--y": 0 });
         expect(end[seat.toolKey]).toMatchObject({ "--d": 1, "--k": 1 });
         expect(end[seat.agentKey]).toMatchObject({ "--d": 1, "--k": 1 });
       }
-      const last = HELPER.at(SEATS[5].helper, false);
-      expect(end[HELPER.key]).toMatchObject({ ...last.helper, autoAlpha: 1 });
-      expect(end[HELPER.nameKey]).toMatchObject({ ...last.name, autoAlpha: 1 });
-      expect(end[PLANNED.key].autoAlpha).toBe(1);
+      expect(end[CHAT.key]["--d"]).toBe(1);
+      expect(end[CHAT.bubbleKey].autoAlpha).toBe(1);
+      for (const line of CHAT.lines) expect(end[line.key]).toMatchObject({ autoAlpha: 1, "--k": 1 });
     });
 
-    it("draws the table and the helper in help's sky and the agents in the process's colour, and pins Planned as a small tag on the table's top right corner, clear of every seat", () => {
+    it("draws the table, the booklets and the chat window in help's sky and the agents in the process's colour, and types the chat's line left to right", () => {
       expect(hueOf(TABLE.key)).toBe("share-help");
-      expect(hueOf(HELPER.key)).toBe("share-help");
+      for (const seat of SEATS) expect(hueOf(seat.guideKey), seat.guideKey).toBe("share-help");
+      expect(hueOf(CHAT.key)).toBe("share-help");
       for (const seat of SEATS) expect(markup, seat.agentKey).toContain(`data-build="${seat.agentKey}" data-role="process"`);
-      expect(markup.slice(indexOf(PLANNED.key))).toMatch(/^[^>]*>\s*<span class="dk-tag dk-dashed--soft"/);
-      expect(markup).toContain(`class="dk-block rel-planned" data-build="${PLANNED.key}"`);
-      // A white ground under its dashes, so the table's edge does not run through its word.
-      expect(ruleOf(".rel-planned .dk-tag rect")).toMatch(/fill:\s*var\(--dk-night\)/);
-      // The outline's svg is positioned, so it would paint over the word: the tag holds its own stack and the svg sits under the word.
-      expect(ruleOf(".rel-planned .dk-tag")).toMatch(/z-index:\s*0/);
-      expect(ruleOf(".rel-planned .dk-tag svg")).toMatch(/z-index:\s*-1/);
-      // Across the table's top edge, over its right end: on the picture, not beside it.
-      const tag = PLANNED.at;
-      const table = TABLE.at;
-      expect(tag.y).toBeLessThan(table.y);
-      expect(tag.y + tag.h).toBeGreaterThan(table.y);
-      expect(tag.x).toBeLessThan(table.x + table.w);
-      expect(tag.x + tag.w).toBeGreaterThan(table.x + table.w);
-      expect(tag.x + tag.w).toBeLessThanOrEqual(RIGHT_EDGE);
-      expect(tag.y).toBeGreaterThanOrEqual(CONTENT_TOP.one);
-      // Clear of every seat's person, laptop and agent by at least 12 px.
-      const apart = (a: { x: number; y: number; w: number; h: number }, b: { x: number; y: number; w: number; h: number }) =>
-        Math.max(b.x - (a.x + a.w), a.x - (b.x + b.w), b.y - (a.y + a.h), a.y - (b.y + b.h));
-      for (const seat of SEATS) {
-        const agent = { x: seat.agent.at.x - seat.agent.r, y: seat.agent.at.y - seat.agent.r, w: 2 * seat.agent.r, h: 2 * seat.agent.r };
-        for (const [name, at] of [["person", seat.person], ["screen", seat.screen], ["base", seat.base], ["agent", agent]] as const) expect(apart(tag, at), `${seat.key} ${name}`).toBeGreaterThanOrEqual(12);
-      }
-      // And of the helper and their name where the tour ends.
-      const last = HELPER.at(SEATS[5].helper, false);
-      const helper = { ...HELPER.person, x: HELPER.person.x + last.helper["--x"], y: HELPER.person.y + last.helper["--y"] };
-      expect(apart(tag, helper)).toBeGreaterThanOrEqual(12);
+      // A booklet lands by --y, so it is a moving Part.
+      for (const seat of SEATS) expect(markup).toContain(`data-build="${seat.guideKey}" class="dk-move"`);
+      expect(ruleOf(".rel-chat-typing")).toMatch(/transform:\s*scaleX\(var\(--k, 0\)\)/);
+      expect(ruleOf(".rel-chat-typing")).toMatch(/transform-origin:\s*0 50%/);
     });
 
-    it("keeps the helper's name off the table and inside the story's foot, and every seat's screen on the table", () => {
+    it("sets each booklet on the table at its laptop's left, level with the laptop and clear of the seat beside it, with its name inside its cover", () => {
       for (const [n, seat] of SEATS.entries()) {
-        const name = HELPER.name.y + HELPER.at(seat.helper, seat.top).name["--y"];
-        if (seat.top) expect(name + 16, seat.key).toBeLessThan(TABLE.at.y);
-        else expect(name - 16, seat.key).toBeGreaterThan(TABLE.at.y + TABLE.at.h);
-        expect(name + 16, seat.key).toBeLessThanOrEqual(STORY.foot);
+        const at = seat.guide.at;
+        expect(at.x - TABLE.at.x, seat.guideKey).toBeGreaterThanOrEqual(48);
+        expect(TABLE.at.x + TABLE.at.w - (agentBox(seat).x + agentBox(seat).w), seat.agentKey).toBeGreaterThanOrEqual(48);
+        expect(at.y, seat.guideKey).toBeGreaterThan(TABLE.at.y);
+        expect(at.y + at.h, seat.guideKey).toBeLessThan(TABLE.at.y + TABLE.at.h);
+        // Its right edge 16 px from the laptop's base, and its middle level with the laptop's.
+        expect(seat.base.x - (at.x + at.w), seat.guideKey).toBe(BOOKLET.gap);
+        expect(at.y + at.h / 2, seat.guideKey).toBeCloseTo(seat.screen.y + (seat.screen.h + seat.base.h) / 2, 9);
+        // Clear of the seat on its left, whose agent is nearest: 24 px of table between them.
+        const left = SEATS.find((other) => other.top === seat.top && other.agent.at.x < seat.agent.at.x && seat.agent.at.x - other.agent.at.x < 400);
+        if (left) expect(apart(at, agentBox(left)), `${seat.guideKey} ${left.agentKey}`).toBeGreaterThanOrEqual(24);
+        // Its name fits right of its spine with 6 px to spare each side.
+        for (const line of seat.guide.lines) expect(labelWidth(line) + 12, line).toBeLessThanOrEqual(at.w - BOOKLET.spine);
+        expect(seat.guide.lines.length * BOOKLET.pitch, seat.guideKey).toBeLessThanOrEqual(at.h - 24);
         expect(seat.top, seat.key).toBe(n < 3);
+        // The screen stays on the table.
         expect(seat.screen.y).toBeGreaterThan(TABLE.at.y);
         expect(seat.screen.y + seat.screen.h + 12).toBeLessThan(TABLE.at.y + TABLE.at.h);
       }
-      expect(HELPER.name.y - 16).toBeGreaterThanOrEqual(CONTENT_TOP.one);
+    });
+
+    it("sets the chat window in the top right corner, under the story band and inside the stage's margin, clear of the table and every seat, with its name in its bar and its line in its bubble", () => {
+      const at = CHAT.at;
+      expect(at.y).toBeGreaterThanOrEqual(CONTENT_TOP.one);
+      expect(at.x + at.w).toBeLessThanOrEqual(RIGHT_EDGE);
+      // Over the table's right end, 12 px clear of its top edge.
+      expect(TABLE.at.y - (at.y + at.h)).toBeGreaterThanOrEqual(12);
+      expect(at.x).toBeLessThan(TABLE.at.x + TABLE.at.w);
+      expect(at.x + at.w).toBeGreaterThan(TABLE.at.x + TABLE.at.w);
+      for (const seat of SEATS) for (const [name, box] of [["person", seat.person], ["screen", seat.screen], ["agent", agentBox(seat)], ["guide", seat.guide.at]] as const) expect(apart(at, box), `${seat.key} ${name}`).toBeGreaterThanOrEqual(48);
+      // The name fits in the bar right of the face, and the bubble and both runs inside the window under it.
+      expect(CHAT.name.x).toBeGreaterThan(CHAT.face.x + CHAT.face.r);
+      expect(CHAT.name.x + labelWidth(CHAT.name.text)).toBeLessThanOrEqual(at.x + at.w - 16);
+      const { bubble } = CHAT;
+      expect(bubble.y).toBeGreaterThanOrEqual(at.y + CHAT.bar + 12);
+      expect(bubble.y + bubble.h).toBeLessThanOrEqual(at.y + at.h - 12);
+      expect(bubble.x + bubble.w).toBeLessThanOrEqual(at.x + at.w - 12);
+      for (const line of CHAT.lines) {
+        expect(line.x + line.w, line.key).toBeLessThanOrEqual(bubble.x + bubble.w - 12);
+        expect(line.y + 10, line.key).toBeLessThanOrEqual(bubble.y + bubble.h - 8);
+      }
+    });
+
+    it("joins the chat window to the room: a tail from its foot reaches down to the table's top edge, clear of its rounded corner and of every seat", () => {
+      const { tail, at } = CHAT;
+      expect(tail.from.y).toBe(at.y + at.h);
+      expect(tail.to.y).toBe(at.y + at.h);
+      expect(tail.from.x).toBeGreaterThanOrEqual(at.x + CHAT.rx);
+      expect(tail.to.x).toBeGreaterThan(tail.from.x);
+      expect(tail.tip.y).toBe(TABLE.at.y);
+      expect(tail.tip.x).toBeGreaterThan(TABLE.at.x + TABLE.rx);
+      expect(tail.tip.x).toBeLessThan(TABLE.at.x + TABLE.at.w - TABLE.rx);
+      const reach = { x: Math.min(tail.tip.x, tail.from.x), y: at.y + at.h, w: Math.max(tail.tip.x, tail.to.x) - Math.min(tail.tip.x, tail.from.x), h: TABLE.at.y - (at.y + at.h) };
+      for (const seat of SEATS) expect(apart(reach, seat.person), seat.key).toBeGreaterThanOrEqual(48);
+      // It draws with the window.
+      expect(markup).toMatch(/data-build="rel\.chat"[^>]*>(?:(?!data-build=)[\s\S])*rel-chat-tail/);
     });
   });
 

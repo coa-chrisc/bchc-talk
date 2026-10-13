@@ -213,8 +213,9 @@ describe("Part 5, what we are sharing (slides 29 to 33a)", () => {
     // The bottle's label is the slide's name for it.
     expect(sauce.BOTTLE.labelLines.join(" ")).toBe(pictures[0].name);
     for (const line of sauce.BOTTLE.labelLines) expect(texts).toContain(line);
-    // Slide 33 keeps the script's hedge.
-    expect(storyOf("workshops")[0]).toMatch(/we hope to run hands-on workshops/);
+    // Slide 33 shares setup guides and offers a chat; it promises no workshops.
+    expect(storyOf("workshops").join(" ")).not.toMatch(/workshop/i);
+    expect(storyOf("workshops")[1]).toMatch(/happy to chat/);
   });
 
   it("never uses orange or the pass green: nobody approves anything on these slides and nothing is checked", () => {

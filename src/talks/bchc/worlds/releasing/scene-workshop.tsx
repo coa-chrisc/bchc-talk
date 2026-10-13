@@ -1,14 +1,13 @@
 /**
  * Slide 33's stage (layout-workshop.ts): the table from above in help's sky,
- * a person and a laptop at each of its six seats, the AI agent beside each
- * laptop, the tool that takes shape on each screen, and the Austin team's
- * helper with their name. SVG for the plane's marks; the "Planned" tag is
- * HTML in WorkshopWords. Static markup: the steps (world.ts) do all the
- * moving.
+ * a person and a laptop at each of its six seats, the guide booklet and the
+ * AI agent beside each laptop, the tool that takes shape on each screen, and
+ * the chat window in the top right corner with Austin's name, a tail down to
+ * the table, and a short line typing in it. SVG for the plane's marks. Static markup: the steps
+ * (world.ts) do all the moving.
  */
-import { Agent, Block, Part, Person, Tag } from "@/components/deck/kit";
-import { Figure } from "./drawings";
-import { HELPER, PLANNED, SEATS, TABLE, type ToolKind } from "./layout-workshop";
+import { Agent, Part, Person, type Box } from "@/components/deck/kit";
+import { BOOKLET, CHAT, SEATS, TABLE, type ToolKind } from "./layout-workshop";
 
 /** The small tool on a screen `at`: lines draw on (--d) and fills come up (--k), so it takes shape. */
 function ScreenTool({ kind, at }: { kind: ToolKind; at: { x: number; y: number; w: number; h: number } }) {
@@ -77,32 +76,82 @@ export function WorkshopMarks() {
               pathLength={1}
             />
           </g>
+          {/* Carried by --y as it lands (Part). */}
+          <g data-hue="share-help">
+            <Part id={seat.guideKey} origin={seat.guide.at}>
+              <Booklet at={seat.guide.at} lines={seat.guide.lines} />
+            </Part>
+          </g>
           <g data-build={seat.toolKey}>
             <ScreenTool kind={seat.tool} at={seat.screen} />
           </g>
           <Agent id={seat.agentKey} at={seat.agent.at} r={seat.agent.r} role="builder" hue="process" />
         </g>
       ))}
-      <g data-hue="share-help">
-        <Part id={HELPER.key} origin={HELPER.start}>
-          <Figure at={HELPER.person} className="rel-hue-line rel-helper" />
-        </Part>
-      </g>
-      <Part id={HELPER.nameKey} origin={HELPER.name}>
-        <text className="rel-words rel-words--label" x={HELPER.name.x} y={HELPER.name.y} textAnchor="middle" dominantBaseline="central">
-          {HELPER.text}
-        </text>
-      </Part>
+      <ChatMarks />
     </>
   );
 }
 
-export function WorkshopWords() {
+/** A guide booklet: a white cover with a spine in help's sky, its edge and spine drawing on (--d), and its name, or two lines of writing where the name would be, coming up on the cover as they draw. */
+function Booklet({ at, lines }: { at: Box; lines: readonly string[] }) {
+  const cx = at.x + BOOKLET.spine + (at.w - BOOKLET.spine) / 2;
+  const cy = at.y + at.h / 2;
   return (
-    <Block id={PLANNED.key} at={PLANNED.at} className="rel-planned">
-      <Tag w={PLANNED.at.w} h={PLANNED.at.h}>
-        {PLANNED.text}
-      </Tag>
-    </Block>
+    <>
+      <rect className="rel-guide" x={at.x} y={at.y} width={at.w} height={at.h} rx={6} />
+      <path className="rel-guide rel-guide--spine" d={`M${at.x + BOOKLET.spine} ${at.y}V${at.y + at.h}H${at.x + 6}Q${at.x} ${at.y + at.h} ${at.x} ${at.y + at.h - 6}V${at.y + 6}Q${at.x} ${at.y} ${at.x + 6} ${at.y}Z`} />
+      <rect className="rel-hue-line dk-draw" x={at.x} y={at.y} width={at.w} height={at.h} rx={6} pathLength={1} />
+      <path className="rel-hue-line dk-draw" d={`M${at.x + BOOKLET.spine} ${at.y}V${at.y + at.h}`} pathLength={1} />
+      {lines.length === 0 &&
+        BOOKLET.writing.map((w, n) => (
+          <rect key={n} className="rel-ink-fill rel-guide__writing" x={cx - w / 2} y={cy + (n - 0.5) * BOOKLET.pitch - 5} width={w} height={10} rx={5} />
+        ))}
+      {lines.map((line, n) => (
+        <text
+          key={line}
+          className="rel-words rel-words--label rel-words--name rel-words--drawn"
+          x={cx}
+          y={cy + (n - (lines.length - 1) / 2) * BOOKLET.pitch}
+          textAnchor="middle"
+          dominantBaseline="central"
+        >
+          {line}
+        </text>
+      ))}
+    </>
+  );
+}
+
+/** The chat window: its frame, bar, tail and face draw on with the name (--d); its bubble comes up whole; each run of the line types out left to right (--k). */
+function ChatMarks() {
+  const { at, rx, bar, face, name, bubble, lines, tail } = CHAT;
+  return (
+    <g data-hue="share-help">
+      <g data-build={CHAT.key}>
+        <rect className="rel-screen" x={at.x} y={at.y} width={at.w} height={at.h} rx={rx} />
+        <path
+          className="rel-chat-bar"
+          d={`M${at.x} ${at.y + bar}V${at.y + rx}Q${at.x} ${at.y} ${at.x + rx} ${at.y}H${at.x + at.w - rx}Q${at.x + at.w} ${at.y} ${at.x + at.w} ${at.y + rx}V${at.y + bar}Z`}
+        />
+        <rect className="bchc-line dk-draw" x={at.x} y={at.y} width={at.w} height={at.h} rx={rx} pathLength={1} />
+        <path className="bchc-line dk-draw" d={`M${at.x} ${at.y + bar}H${at.x + at.w}`} pathLength={1} />
+        {/* The tail opens the window's foot where it joins: white over that stretch of the frame, then its two sides. */}
+        <path className="rel-screen" d={`M${tail.from.x + 1.5} ${tail.from.y - 3}H${tail.to.x - 1.5}V${tail.to.y + 2}L${tail.tip.x} ${tail.tip.y}Z`} />
+        <path className="bchc-line dk-draw rel-chat-tail" d={`M${tail.from.x} ${tail.from.y}L${tail.tip.x} ${tail.tip.y}L${tail.to.x} ${tail.to.y}`} pathLength={1} />
+        <circle className="rel-hue-line dk-draw" cx={face.x} cy={face.y} r={face.r} pathLength={1} />
+        <text className="rel-words rel-words--label rel-words--name rel-words--drawn" x={name.x} y={name.y} dominantBaseline="central">
+          {name.text}
+        </text>
+      </g>
+      <g data-build={CHAT.bubbleKey}>
+        <rect className="rel-chat-bubble" x={bubble.x} y={bubble.y} width={bubble.w} height={bubble.h} rx={14} />
+      </g>
+      {lines.map((line) => (
+        <g key={line.key} data-build={line.key}>
+          <rect className="rel-ink-fill rel-chat-typing" x={line.x} y={line.y} width={line.w} height={10} rx={5} />
+        </g>
+      ))}
+    </g>
   );
 }

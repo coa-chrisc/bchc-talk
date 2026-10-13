@@ -1,7 +1,7 @@
 /**
  * The clicks of slides 37 to 38b, one a slide, each a chain of beats
  * (docs/bchc-flow-revision.md, sections 1 and 3). Slides 34 to 36a are in
- * steps-steps.ts.
+ * steps-steps.ts, and 38s, between 38 and 38a, in steps-safe.ts.
  */
 import type { StepDef } from "@/components/deck/engine";
 import { DUR, EASE, draw, fill, hide, mark, open, rise, show, to, wipe } from "@/components/deck/kit";
@@ -9,6 +9,7 @@ import { picture, story } from "../steps";
 import { APPROVER_SLIDE, TOOLS } from "./layout-two";
 import { FDE, QUESTIONS } from "./layout-help";
 import { chained, handOver, leave } from "./moves";
+import { safe } from "./steps-safe";
 import { STAGGER_PEOPLE, keys } from "./steps-steps";
 
 /** An agent arrives beside its person, and its ring fills in the process's colour: it is ready to work. */
@@ -131,7 +132,7 @@ const question = (i: number) => {
 const questions = () =>
   picture("questions", {
     play: chained([
-      { moves: [leave("approver"), handOver("approver", "questions")] },
+      { moves: [leave("safe"), handOver("safe", "questions")] },
       { moves: story("questions", 0), with: true, hold: 0.3 },
       { moves: draw(QUESTIONS.rule.key, { at: 0, duration: 0.6 }), with: true, hold: 0.9 },
       { moves: question(0), with: true, hold: 0.4 },
@@ -190,4 +191,4 @@ const fde = () =>
     ]),
   });
 
-export const stepsOfTwo = (): StepDef[] => [...tools(), ...approver(), ...questions(), ...fde()];
+export const stepsOfTwo = (): StepDef[] => [...tools(), ...approver(), ...safe(), ...questions(), ...fde()];

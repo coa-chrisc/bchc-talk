@@ -151,7 +151,7 @@ export const HOW_WE_BUILD: Picture[] = [
     see: ["The view moves in from the board to one finished piece of work and stays there, with the board small beside it. Three large marks land under it one at a time, each with its label: \"First reviewer: is it complete?\", then \"Second reviewer: is it safe and bug-free?\", then \"A person approves\" with the \"a person approves\" mark. Both reviewer marks carry the reviewer's diamond from slide 19, and the builder who did the work stands to one side, labelled \"Builder\". The slide ends on the piece of work and its three labelled marks."],
     story: [
       "Two AI reviewers check every change, and neither one wrote it.",
-      "After both reviewers pass it, a person approves the change.",
+      "After both reviewers pass it, a person approves the change. That is the governance step.",
     ],
     steps: [
       { id: "play", show: ["Builder", "First reviewer: is it complete?", "Second reviewer: is it safe and bug-free?", "A person approves"] },

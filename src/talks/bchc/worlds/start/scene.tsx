@@ -6,6 +6,7 @@ import { KICKER, KICKERS, TITLE, TITLES } from "./layout";
 import { Kicker } from "./parts";
 import { AskHtml, AskMarks } from "./scene-ask";
 import { PathHtml, PathMarks } from "./scene-path";
+import { SafeHtml, SafeMarks } from "./scene-safe";
 import { StepsHtml, StepsMarks } from "./scene-steps";
 import { TwoHtml, TwoMarks } from "./scene-two";
 import "./start.css";
@@ -17,6 +18,7 @@ export function Scene() {
         <>
           <StepsMarks />
           <TwoMarks />
+          <SafeMarks />
           <PathMarks />
           <AskMarks />
         </>
@@ -30,6 +32,7 @@ export function Scene() {
       ))}
       <StepsHtml />
       <TwoHtml />
+      <SafeHtml />
       <PathHtml />
       <AskHtml />
     </Plane>

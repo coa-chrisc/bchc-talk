@@ -1,19 +1,21 @@
 /**
- * Slide 33, help getting set up (docs/bchc-talk-script.md, slide 33, They
- * see): a workshop table seen from above, in sky, with a person in each of
- * its six seats and a laptop in front of each. A person labelled "Austin
- * team" goes round the table from seat to seat; as they reach each seat, a
- * small tool takes shape on its screen (a form, a map, a chart) and the AI
- * agent beside it fills its ring. A small "Planned" tag is pinned on the
- * table's corner. Every place is a plain number; every word is the script's.
+ * Slide 33, setup guides (docs/bchc-talk-script.md, slide 33, They see): a
+ * table seen from above, in sky, with a person in each of its six seats and
+ * a laptop in front of each. A small guide booklet lands beside each
+ * laptop, the first with "Setup guide" on its cover and the rest with lines
+ * of writing; then a small tool takes shape on each screen (a form, a map, a
+ * chart) and the AI agent beside it fills its ring. Over the table's far end
+ * a small chat window, "Austin" in its bar, opens, its tail reaching down to
+ * the table, and a short line types into it. Every place is a plain number;
+ * every word is the script's.
  */
-import { box, type Box, type Point } from "@/components/deck/kit";
-import { shown } from "../../script/find";
+import { CONTENT_TOP, box, type Box } from "@/components/deck/kit";
+import { breakAfter, shown } from "../../script/find";
 
-const [AUSTIN_TEAM, PLANNED_TAG] = shown("workshops", "play");
+const [SETUP_GUIDE, AUSTIN] = shown("workshops", "play");
 
-/** The table, from above: a rounded slab 1080 by 270 in the middle of the room under the story band. */
-export const TABLE = { key: "rel.table", at: box(420, 590, 1080, 270), rx: 28 } as const;
+/** The table, from above: a rounded slab 1240 by 270 under the story band, wide enough for a booklet beside each laptop. */
+export const TABLE = { key: "rel.table", at: box(340, 590, 1240, 270), rx: 28 } as const;
 
 /** What each screen shows when its tool has taken shape. */
 export const TOOL_KINDS = ["form", "map", "chart"] as const;
@@ -23,17 +25,31 @@ export type ToolKind = (typeof TOOL_KINDS)[number];
 const PERSON = { w: 48, h: 64 } as const;
 export const SCREEN = { w: 150, h: 92, base: { w: 176, h: 12 } } as const;
 const AGENT = { gap: 100, r: 14 } as const;
-/** The seats' middles along the table, three a side. */
-const SEAT_XS = [660, 960, 1260] as const;
-/** Where the helper stands: this far right of the person they are helping. */
-const BESIDE = 82;
+/**
+ * A booklet 108 by 100, 12 px left of its laptop's base and level with the
+ * laptop. The first carries its name on its cover on two lines in the label
+ * type, right of its spine; the others carry two lines of writing where the
+ * name would be, `writing` wide.
+ */
+export const BOOKLET = { w: 108, h: 100, gap: 12, spine: 12, pitch: 30, writing: [64, 52] } as const;
+/**
+ * The seats' middles along the table, three a side, 360 apart: each seat's
+ * booklet, laptop and agent run from 208 px left of its middle to 114 px
+ * right of it, so the three sit about 100 px in from either end.
+ */
+const SEAT_XS = [645, 1005, 1365] as const;
+
+/** The booklet's name, broken where the author breaks it. */
+const COVER = breakAfter(SETUP_GUIDE, "Setup");
 
 /**
- * The six seats, three along the top and three along the foot, numbered the
- * way the helper goes round: left to right along the top, then right to
- * left along the foot. Each has its person off the table's edge, its laptop
- * on the table in front of them, upright so its screen can be read, and the
- * agent at the laptop's right.
+ * The six seats, three along the top and three along the foot, numbered in
+ * the order their tools take shape: left to right along the top, then right
+ * to left along the foot. Each has its person off the table's edge, its
+ * laptop on the table in front of them, upright so its screen can be read,
+ * its booklet at the laptop's left and the agent at its right. Only the
+ * first seat's booklet is named: six names would say the same word six
+ * times.
  */
 export const SEATS = [0, 1, 2, 3, 4, 5].map((n) => {
   const top = n < 3;
@@ -41,68 +57,68 @@ export const SEATS = [0, 1, 2, 3, 4, 5].map((n) => {
   const person: Box = box(x - PERSON.w / 2, top ? TABLE.at.y - 20 - PERSON.h : TABLE.at.y + TABLE.at.h + 16, PERSON.w, PERSON.h);
   const screenY = top ? TABLE.at.y + 16 : TABLE.at.y + TABLE.at.h - 16 - SCREEN.base.h - SCREEN.h;
   const screen: Box = box(x - SCREEN.w / 2, screenY, SCREEN.w, SCREEN.h);
-  const helper: Point = { x: x + BESIDE, y: person.y + PERSON.h / 2 };
+  const base = box(x - SCREEN.base.w / 2, screenY + SCREEN.h, SCREEN.base.w, SCREEN.base.h);
+  const booklet = box(base.x - BOOKLET.gap - BOOKLET.w, screenY + (SCREEN.h + SCREEN.base.h - BOOKLET.h) / 2, BOOKLET.w, BOOKLET.h);
   return {
     key: `rel.seat.${n}`,
     laptopKey: `rel.seat.${n}.laptop`,
     toolKey: `rel.seat.${n}.tool`,
     agentKey: `rel.seat.${n}.agent`,
+    guideKey: `rel.seat.${n}.guide`,
     top,
     person,
     screen,
-    base: box(x - SCREEN.base.w / 2, screenY + SCREEN.h, SCREEN.base.w, SCREEN.base.h),
+    base,
     agent: { at: { x: x + AGENT.gap, y: screenY + SCREEN.h / 2 }, r: AGENT.r },
     /** A form on one, a map on the next, a chart on the third, round the table. */
     tool: TOOL_KINDS[n % 3],
-    /** Where the helper stands at this seat, the middle of their figure. */
-    helper,
+    /** The guide booklet at the laptop's left, its name on the first one's cover. */
+    guide: { at: booklet, lines: n === 0 ? COVER : [] },
   };
 });
 
-/**
- * The helper: a person in sky, help's colour, who comes in at the table's
- * left end, goes along the top from seat to seat, round the right end and
- * back along the foot. Their name travels with them, over their head along
- * the top and under their feet along the foot, so it never sits on the table.
- */
-const HELPER_START: Point = { x: TABLE.at.x - 100, y: TABLE.at.y + TABLE.at.h / 2 };
-/** Round the table's right end, between the top's last seat and the foot's first. */
-export const HELPER_TURN: Point = { x: TABLE.at.x + TABLE.at.w + 100, y: TABLE.at.y + TABLE.at.h / 2 };
-const NAME_GAP = 26;
-const nameAt = (p: Point, above: boolean): Point => ({ x: p.x, y: above ? p.y - PERSON.h / 2 - NAME_GAP : p.y + PERSON.h / 2 + NAME_GAP });
-export const HELPER = {
-  key: "rel.helper",
-  nameKey: "rel.helper.name",
-  text: AUSTIN_TEAM,
-  start: HELPER_START,
-  person: box(HELPER_START.x - PERSON.w / 2, HELPER_START.y - PERSON.h / 2, PERSON.w, PERSON.h),
-  /** The name's middle where the helper starts: over their head. */
-  name: nameAt(HELPER_START, true),
-  /** The helper's offset from the start at a point, and their name's offset from where it starts. */
-  at: (p: Point, above: boolean) => {
-    const name = nameAt(p, above);
-    const start = nameAt(HELPER_START, true);
-    return { helper: { "--x": p.x - HELPER_START.x, "--y": p.y - HELPER_START.y }, name: { "--x": name.x - start.x, "--y": name.y - start.y } };
-  },
-} as const;
+/** How far a booklet drops as it lands. */
+export const BOOKLET_DROP = -18;
 
 /**
- * The tag pinned on the table's top right corner: across the table's top
- * edge, 24 px past its right end, on a white ground that covers the edge
- * under it, so it reads as a label on the workshop itself.
+ * The chat window in the top right corner: 300 by 132, its right edge 16 px
+ * inside the stage's margin and its foot 14 px over the table, clear of the
+ * top row's last person. A bar 44 high carries a small round picture and
+ * the name; under it, one message bubble holds a short line that types out
+ * in two runs. A tail from its foot, near its left end, reaches down to the
+ * table's top edge, so the chat is with the people at the table.
  */
-const TAG = { w: 160, h: 44, past: 24 } as const;
-export const PLANNED = {
-  key: "rel.planned",
-  at: box(TABLE.at.x + TABLE.at.w + TAG.past - TAG.w, TABLE.at.y - TAG.h / 2, TAG.w, TAG.h),
-  text: PLANNED_TAG,
+const CHAT_AT = box(1508, CONTENT_TOP.one + 4, 300, 132);
+const BAR = 44;
+const BUBBLE = box(CHAT_AT.x + 18, CHAT_AT.y + BAR + 16, 216, 56);
+export const CHAT = {
+  key: "rel.chat",
+  bubbleKey: "rel.chat.bubble",
+  at: CHAT_AT,
+  rx: 12,
+  bar: BAR,
+  /** The tail: two points on the window's foot, and its tip on the table's top edge. */
+  tail: {
+    from: { x: CHAT_AT.x + 40, y: CHAT_AT.y + CHAT_AT.h },
+    to: { x: CHAT_AT.x + 68, y: CHAT_AT.y + CHAT_AT.h },
+    tip: { x: CHAT_AT.x + 30, y: TABLE.at.y },
+  },
+  /** The small round picture at the bar's left, and the name beside it. */
+  face: { x: CHAT_AT.x + 30, y: CHAT_AT.y + BAR / 2, r: 11 },
+  name: { x: CHAT_AT.x + 52, y: CHAT_AT.y + BAR / 2, text: AUSTIN },
+  bubble: BUBBLE,
+  /** The line's two runs, typed one after the other: each a bar of writing 10 high, left to right. */
+  lines: [
+    { key: "rel.chat.line.0", x: BUBBLE.x + 16, y: BUBBLE.y + 14, w: 176 },
+    { key: "rel.chat.line.1", x: BUBBLE.x + 16, y: BUBBLE.y + 32, w: 104 },
+  ],
 } as const;
 
 /** Every part slide 33 puts on the stage. */
 export const WORKSHOP_OWN: readonly string[] = [
   TABLE.key,
-  ...SEATS.flatMap((seat) => [seat.key, seat.laptopKey, seat.toolKey, seat.agentKey]),
-  HELPER.key,
-  HELPER.nameKey,
-  PLANNED.key,
+  ...SEATS.flatMap((seat) => [seat.key, seat.laptopKey, seat.guideKey, seat.toolKey, seat.agentKey]),
+  CHAT.key,
+  CHAT.bubbleKey,
+  ...CHAT.lines.map((line) => line.key),
 ];

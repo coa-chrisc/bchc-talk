@@ -4,8 +4,8 @@
  * slide's layout shares, and where slides 34 to 36 put their parts and
  * words. Every word is read from the script; a title's line break is given
  * by the word it falls after. Every id starts with its picture's id, so
- * what a slide leaves behind is easy to name. Slides 36a to 38 are in layout-two.ts, 38a and 38b in
- * layout-help.ts, 39 and 40 in layout-path.ts, and 41 and 42 in
+ * what a slide leaves behind is easy to name. Slides 36a to 38 are in layout-two.ts, 38s in
+ * layout-safe.ts, 38a and 38b in layout-help.ts, 39 and 40 in layout-path.ts, and 41 and 42 in
  * layout-ask.ts.
  */
 import { box, type Box, type Point, type StoryBand } from "@/components/deck/kit";
@@ -19,7 +19,8 @@ export const layerOf = (id: string) => ({ marks: `${id}.marks`, html: `${id}.htm
 
 /** Titles too long for one line at 72 px inside x 1824, by the word each line ends on. Slide 40's runs to three lines. */
 const BREAKS: Record<string, string[]> = {
-  questions: ["questions"],
+  safe: ["data"],
+  questions: ["teams"],
   fde: ["staff,"],
   "low-risk": ["projects"],
   examples: ["templates:", "and"],
@@ -35,7 +36,7 @@ export const TITLE_LINES: Record<string, number> = Object.fromEntries(TITLES.map
  * three steps the slide is: the first word their click shows is that label
  * (the script's They see says so).
  */
-const LABELLED = new Set(["step-one", "training", "github", "tools", "approver", "low-risk"]);
+const LABELLED = new Set(["step-one", "training", "github", "tools", "approver", "safe", "low-risk"]);
 
 /** The words a picture's drawing is labelled with: its click's words, the label over its title aside. */
 export const labelsOf = (pictureId: string) => shown(pictureId, "play").slice(LABELLED.has(pictureId) ? 1 : 0);

@@ -11,7 +11,7 @@
 import { CONTENT_TOP, box, type Box, type Hue, type Point } from "@/components/deck/kit";
 import { breakAfter, pictureOf, shown } from "../../script/find";
 
-/** Each part's colour, in the script's order: the agent pack, the source code, the design system and skills, help getting set up. */
+/** Each part's colour, in the script's order: the agent pack, the source code, the design system and skills, the setup guides. */
 export const SHARE_HUES = ["share-pack", "share-code", "share-design", "share-help"] as const satisfies readonly Hue[];
 
 /* The panels */
@@ -20,7 +20,7 @@ export const SHARE_HUES = ["share-pack", "share-code", "share-design", "share-he
 export const PANEL = { w: 408, h: 460, y: CONTENT_TOP.one + 40, pitch: 440, x0: 96, pad: 16 } as const;
 const HEADINGS = shown("releasing", "play");
 /** Where each heading breaks to fit its panel's 376 px at 32 px: after each word given (the author's, so a fallback face never decides a break). */
-const HEADING_BREAKS: readonly (readonly string[])[] = [["for your"], ["code,"], ["your own", "system"], []];
+const HEADING_BREAKS: readonly (readonly string[])[] = [["for your"], ["code,"], ["system", "with"], ["guides"]];
 
 export const PANELS = HEADINGS.map((heading, i) => {
   const x = PANEL.x0 + i * PANEL.pitch;
@@ -50,7 +50,7 @@ export const PANEL_ART = {
   shelf: { tiles: 6, scale: 2.3, rise: 40, reach: 176 },
   /** The design system and skills: slide 32's two binders in small, ours filled and yours blank, their pages drawn `scale` times a 36 by 32 sheet. */
   binders: { w: 150, h: 124, gap: 48, ring: 5, scale: 1.35 },
-  /** Help getting set up: slide 33's table from above, three people a side, 84 apart. */
+  /** The setup guides: slide 33's table from above, three people a side, 84 apart. */
   table: { w: 280, h: 78, reach: 42, pitch: 84, person: { w: 28, h: 36 }, laptop: { w: 36, h: 22 } },
 } as const;
 
@@ -123,9 +123,8 @@ export const REST: Pose = { x: PANEL.x0 + 3 * PANEL.pitch + PANEL.w - BOTTLE.bod
 export const WOBBLE = [6, -3.5, 1.5, 0] as const;
 /**
  * The title's and the story line's right ends at 1920 by 1080, measured in
- * the deck's face (We're giving you Austin's magic sauce. ends at 1379;
- * the story line at 1264): the bottle keeps right of this wherever it
- * rises to their height.
+ * the deck's face (the title at 1287, the story line at 1264): the bottle
+ * keeps right of this wherever it rises to their height.
  */
 export const WORDS_END_X = 1400;
 

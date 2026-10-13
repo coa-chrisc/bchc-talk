@@ -51,15 +51,17 @@ describe("slide 33a, the help spreads", () => {
   it("labels Austin, the ready departments and the next ones once each, from the script, and puts every part of its own on the stage once", () => {
     expect([AUSTIN.text, READY_LABEL.text, NEXT_LABEL.text]).toEqual(shown("spreads", "play"));
     expect([AUSTIN.text, READY_LABEL.text, NEXT_LABEL.text]).toEqual(["Austin", "Ready now", "Next"]);
-    for (const text of ["Austin", "Ready now", "Next"]) expect(texts.filter((t) => t === text), text).toHaveLength(1);
+    // Austin is named twice in the world: in slide 33's chat window and on its circle here.
+    expect(texts.filter((t) => t === "Austin")).toHaveLength(2);
+    for (const text of ["Ready now", "Next"]) expect(texts.filter((t) => t === text), text).toHaveLength(1);
     for (const key of SPREADS_OWN) expect(markup.split(`data-build="${key}"`).length - 1, key).toBe(1);
     expect(OWN.spreads).toEqual([TITLES.spreads.key, ...storyKeys, ...SPREADS_OWN]);
     // The title fits one line, so its story band sits under one line.
-    expect(TITLES.spreads.lines).toEqual(["The departments we help first will teach the next."]);
+    expect(TITLES.spreads.lines).toEqual(["The departments that start first will teach the next."]);
     expect(STORIES.spreads.band).toBe("one");
     expect(STORIES.spreads.lines).toEqual(storyOf("spreads"));
-    // Slide 33's title is the first departments now, still on one line.
-    expect(TITLES.workshops.lines).toEqual(["We'll help the first departments get set up."]);
+    // Slide 33's title is the setup guides now, on one line.
+    expect(TITLES.workshops.lines).toEqual(["Setup guides come with the release."]);
   });
 
   it("builds a tree three levels deep from Austin at the left: three ready departments, each with its own table and two or three next ones", () => {
@@ -152,7 +154,7 @@ describe("slide 33a, the help spreads", () => {
     const [shrink] = propPlays(step, TABLE.key, "--s");
     expect(shrink.on).toEqual(SHRUNK);
     expect(shrink.at).toBeLessThanOrEqual(0.3);
-    // The seats, the helper and the tag have gone before the table moves.
+    // The seats, the booklets and the chat window have gone before the table moves.
     expect(shrink.at).toBeGreaterThanOrEqual(Math.max(...leaving.map((key) => endOf(step, key))));
     // The swap is a cut the moment the shrink lands: the small table shows as the big one goes.
     const gone = propPlays(step, TABLE.key, "autoAlpha").find((play) => play.on.autoAlpha === 0)!;

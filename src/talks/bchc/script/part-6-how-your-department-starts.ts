@@ -104,19 +104,36 @@ export const HOW_YOU_START: Picture[] = [
     ],
   },
   {
+    id: "safe",
+    number: "38s",
+    part: 6,
+    world: "start",
+    name: "Step two: data security and governance",
+    show: "Rolling out AI safely means controlling the data and keeping a person in charge.",
+    say: "Some of you are rightly cautious about AI, and this is how we keep it safe. Nothing runs outside accounts your city has approved. We start with data you already publish. Every change goes through tests, two AI reviewers and a person before it goes live, and the record on GitHub shows your auditors who changed what and when. If something is wrong, you roll it back.",
+    see: ["A small label \"Step two\" sits above the title. A dashed outline labelled \"Your department\" stands inside a fence, labelled \"Accounts your city approves\". A data table labelled \"Public data\" passes through the gate in the fence into the department; a second table labelled \"Personal or health data\" stops outside it and stays there. Inside, three changes arrive one at a time; each stops at a person labelled \"Approver\", takes the \"a person approves\" mark, and lands on a record line labelled \"GitHub record\" with a time stamp. The last entry slides back off the line, labelled \"Undone\", and the line closes up."],
+    story: [
+      "Agents work inside the GitHub and AI tool accounts your city already approves, under its own rules.",
+      "Start with public data. A person approves every change, GitHub records it, and you can undo it.",
+    ],
+    steps: [
+      { id: "play", show: ["Step two", "Accounts your city approves", "Your department", "Public data", "Personal or health data", "Approver", "GitHub record", "Undone"] },
+    ],
+  },
+  {
     id: "questions",
     number: "38a",
     part: 6,
     world: "start",
-    name: "The questions your IT and security teams will ask",
-    show: "Expect four questions from your IT and security teams.",
+    name: "Your IT and security teams will ask these four questions",
+    show: "Your IT and security teams will ask these four questions.",
     say: "Keep the work inside accounts your city already approves, and remember that any change can be rolled back.",
-    see: ["Four questions appear one at a time, each with its short answer beside it:", "Where does our data go? Start with public data.", "Who is accountable? A named person approves every change.", "What if the AI gets it wrong? Tests, two AI reviewers and a person check every change.", "Do we need developers? You need someone technical to help with setup."],
+    see: ["Four questions appear one at a time, each with its short answer beside it:", "Where does our data go? Start with public data.", "Who is accountable? A person approves every change.", "What if the AI gets it wrong? Tests, two AI reviewers and a person check every change.", "Do we need developers? You need someone technical to help with setup."],
     story: [
-      "Keep the work in accounts your city already uses, and you can undo any change.",
+      "Keep the work in accounts your city already approves, and you can undo any change.",
     ],
     steps: [
-      { id: "play", show: ["Where does our data go?", "Start with public data.", "Who is accountable?", "A named person approves every change.", "What if the AI gets it wrong?", "Tests, two AI reviewers and a person check every change.", "Do we need developers?", "You need someone technical to help with setup."] },
+      { id: "play", show: ["Where does our data go?", "Start with public data.", "Who is accountable?", "A person approves every change.", "What if the AI gets it wrong?", "Tests, two AI reviewers and a person check every change.", "Do we need developers?", "You need someone technical to help with setup."] },
     ],
   },
   {
@@ -159,8 +176,8 @@ export const HOW_YOU_START: Picture[] = [
     part: 6,
     world: "start",
     name: "Two starter templates",
-    show: "Two ideas we'll release as starter templates: a Service Catalog and a Voice-Assisted Service Helpline.",
-    say: "These are ideas we've worked out in Austin, and both will ship as starter templates in our release. The helpline lets people ask out loud and get pointed to the right service. Projects like these are a good place to cut your teeth, and they pay off from the first day.",
+    show: "Two ideas we plan to release as starter templates: a Service Catalog and a Voice-Assisted Service Helpline.",
+    say: "These are ideas we've worked out in Austin, and both are planned for our release. The helpline lets people ask out loud and get pointed to the right service. Projects like these are a good place to cut your teeth, and they pay off from the first day.",
     see: ["Two line drawings side by side, each with a tag reading \"Starter template\". In the first, labelled \"Service Catalog\", a resident answers a few questions and their matching services light up. In the second, labelled \"Voice-Assisted Service Helpline\", a spoken question turns into a short list of services. Both stay line drawings, with no screenshots."],
     story: [
       "The Service Catalog matches residents to services. The helpline answers questions people ask out loud.",
